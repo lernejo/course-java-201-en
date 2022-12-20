@@ -1,0 +1,3337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="author" content="Loïc Ledoyen">
+<title>Java 201 - Architecture logicielle</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Java 201 - Architecture logicielle</h1>
+<div class="details">
+<span id="author" class="author">Loïc Ledoyen</span><br>
+<span id="email" class="email"><a href="mailto:ledoyen.loic@gmail.com">ledoyen.loic@gmail.com</a></span><br>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Java 201</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">Introduction</a></li>
+<li><a href="#_rappels_sur_les_outils">1. Rappels sur les outils</a>
+<ul class="sectlevel2">
+<li><a href="#_git">1.1. Git</a></li>
+<li><a href="#_concepts_utilisés_par_git">1.2. Concepts utilisés par Git</a></li>
+<li><a href="#_maven">1.3. Maven</a></li>
+<li><a href="#_junit">1.4. JUnit</a></li>
+</ul>
+</li>
+<li><a href="#_le_découplage_un_concept_valide_a_toutes_les_échelles">2. Le Découplage, un concept valide a toutes les échelles</a>
+<ul class="sectlevel2">
+<li><a href="#_à_léchelle_dune_classe_java">2.1. À l’échelle d’une classe Java</a></li>
+<li><a href="#_a_léchelle_dune_application">2.2. A l’échelle d’une application</a></li>
+<li><a href="#_a_léchelle_dun_ensemble_dapplication">2.3. A l’échelle d’un ensemble d’application</a></li>
+</ul>
+</li>
+<li><a href="#_quelques_types_darchitecture">3. Quelques types d’architecture</a>
+<ul class="sectlevel2">
+<li><a href="#_n_tiers">3.1. N-tiers</a></li>
+<li><a href="#_hexagonale">3.2. Hexagonale</a></li>
+<li><a href="#_monolithique_vs_micro_services">3.3. Monolithique vs micro-services</a></li>
+</ul>
+</li>
+<li><a href="#_dimensionnement_considérations_relatives">4. Dimensionnement &amp; considérations relatives</a>
+<ul class="sectlevel2">
+<li><a href="#_identifier_les_spofs">4.1. Identifier les SPOFs</a></li>
+<li><a href="#_identifier_les_points_de_contention">4.2. Identifier les points de contention</a></li>
+<li><a href="#_répartir_la_charge">4.3. Répartir la charge</a></li>
+<li><a href="#_exemple_dévolution_darchitecture">4.4. Exemple d’évolution d’architecture</a></li>
+</ul>
+</li>
+<li><a href="#_documenter_larchitecture">5. Documenter l’architecture</a>
+<ul class="sectlevel2">
+<li><a href="#_readme">5.1. README</a></li>
+<li><a href="#_c4">5.2. C4</a></li>
+<li><a href="#_adr_architectural_decision_records">5.3. ADR (Architectural Decision Records)</a></li>
+<li><a href="#_documentation_des_apis">5.4. Documentation des APIs</a></li>
+<li><a href="#_bdd_et_atdd">5.5. BDD et ATDD</a></li>
+</ul>
+</li>
+<li><a href="#_techniques_bonnes_pratiques">6. Techniques &amp; bonnes pratiques</a>
+<ul class="sectlevel2">
+<li><a href="#_kiss_yagni_dry">6.1. KISS, YAGNI &amp; DRY</a></li>
+</ul>
+</li>
+<li><a href="#_gestion_des_logs">7. Gestion des logs</a>
+<ul class="sectlevel2">
+<li><a href="#_bibliothèques_de_log">7.1. Bibliothèques de log</a></li>
+<li><a href="#_logs_gc">7.2. Logs GC</a></li>
+<li><a href="#_heap_dump">7.3. Heap Dump</a></li>
+</ul>
+</li>
+<li><a href="#_supervision">8. Supervision</a></li>
+<li><a href="#_conclusion">Conclusion</a></li>
+<li><a href="#_pour_aller_plus_loin">Pour aller plus loin</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+Architecture is about the important stuff.<br>
+Whatever that is.
+</blockquote>
+<div class="attribution">
+&#8212; Ralph Johnson
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>It means that the heart of thinking architecturally about software is to decide what is important, (i.e. what is architectural), and then expend energy on keeping those architectural elements in good condition.<br>
+For a developer to become an architect, they need to be able to recognize what elements are important, recognizing what elements are likely to result in serious problems should they not be controlled.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; Martin Fowler
+</div>
+</div>
+<div class="paragraph">
+<p>Un logiciel doit répondre à plusieurs objectifs dépendant de son contexte.<br>
+Parmi ces objectifs on retrouve :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Maintenabilité / évolutivité</p>
+</li>
+<li>
+<p>Testabilité</p>
+</li>
+<li>
+<p>Fiabilité / Robustesse / tolérance à la panne</p>
+</li>
+<li>
+<p>Scalabilité</p>
+</li>
+<li>
+<p>Sécurité</p>
+</li>
+<li>
+<p>Performance</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>L’architecture logicielle est l’ensemble des moyens techniques utilisés pour répondre à ces objectifs tout en satisfaisant aux contraintes non techniques du projet.</p>
+</div>
+<div class="paragraph">
+<p>Tous les objectifs ne peuvent pas être atteint d’un coup, et l’architecture logicielle est le compromis qui convient le mieux pour atteindre les objectifs prioritaires dans le contexte du projet.</p>
+</div>
+<div class="paragraph">
+<p>Les facteurs peuvent être multiples :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Délais courts (<em>deadline</em>)</p>
+</li>
+<li>
+<p>Budget limité</p>
+</li>
+<li>
+<p>Certification de sécurité nécessaire</p>
+</li>
+<li>
+<p>Connexion à un système <em>historique</em> utilisant une technologie spécifique</p>
+</li>
+<li>
+<p>Etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>L’ordre de priorité de ces objectifs doit être décidé avec l’ensemble des acteurs du projet et réajusté périodiquement afin de suivre l’évolution du projet dans le temps.<br>
+Il s’agit d’un partenariat.</p>
+</div>
+<div class="paragraph">
+<p>L’équipe de développement met en oeuvre les principes d’architecture logicielle pour répondre au mieux aux objectifs du projet.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rappels_sur_les_outils">1. Rappels sur les outils</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_git">1.1. Git</h3>
+<div class="paragraph">
+<p>Git est un SCM (<strong>S</strong>ource <strong>C</strong>ode <strong>M</strong>anagement tool) décentralisé.</p>
+</div>
+<div class="paragraph">
+<p>On étend par décentralisé le fait qu’il peut y avoir plusieurs instances d’un même dépôt sur des serveurs différents.<br>
+Typiquement, dans le monde de l’open-source, quand un individu externe à l’organisation souhaite contribuer au code d’un dépôt, il en fait une copie, travaille sur sa copie, puis propose le code de sa copie pour intégration sur le dépôt <em>officiel</em>.</p>
+</div>
+<div class="paragraph">
+<p>Git est aujourd’hui très répandu, mais fait suite historiquement à d’autres SCMs (CVS, SVN, Mercurial, etc.).<br>
+Tous ces outils fonctionnent par différentiel (patch) pour permettre de restaurer une version précédente, ou encore de travailler sur une version parallèle qui pourra plus tard être réincorporée dans la version principale.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/git_sample.png" alt="git sample">
+</div>
+</div>
+<div class="paragraph">
+<p>Voici le vocabulaire consacré :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>commit</strong> : une révision / version contenant des modifications de code</p>
+</li>
+<li>
+<p><strong>branch</strong> : un fil de modification, une suite de révisions</p>
+</li>
+<li>
+<p><strong>tag</strong> : alias pour une version spécifique, souvent utilisé pour marquer une version applicative (1.0.25 par exemple)</p>
+</li>
+<li>
+<p><strong>merge</strong> : fusion d’une branche dans une autre</p>
+</li>
+<li>
+<p><strong>checkout</strong> : récupérer le code d’un serveur distant dans une version spécifique</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_quelques_commandes_utiles">1.1.1. Quelques commandes utiles</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Initialiser un dépôt</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>git clone &lt;url&gt;</code> : copie un dépôt distant existant en local</p>
+</li>
+<li>
+<p>Ou <code>git init</code> : transforme le dossier courant en dépôt local. Un dépôt distant pourra être indiqué par la suite avec <code>git remote add origin &lt;url&gt;</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mettre à jour</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>git fetch --all --prune</code> : récupère les changements du dépôt distant</p>
+</li>
+<li>
+<p><code>git pull</code> : fusionne les changements distants avec les fichiers locaux</p>
+</li>
+<li>
+<p><code>git rebase origin/&lt;current-branch&gt;</code> : déplace les commits locaux après ceux ayant été poussés sur le dépôt distant (et sur la même branche)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Changer de branche</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>git checkout &lt;branch&gt;</code> : positionne les sources courantes sur la dernière version de <code>&lt;branch&gt;</code></p>
+</li>
+<li>
+<p><code>git branch -b &lt;branch&gt;</code> : crée une branche de nom <code>&lt;branch&gt;</code> dont le point de départ est le commit courant</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Observer les changements</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>git status</code> : affiche les différences entre les dépôts local et distant</p>
+</li>
+<li>
+<p><code>git log --oneline -n 15</code> : affiche les 15 derniers commits de la branche courante (avec leurs hash)</p>
+</li>
+<li>
+<p><code>git diff --stat</code> : affiche un résumé des changements</p>
+</li>
+<li>
+<p><code>git diff --word-diff=color &lt;file&gt;</code> : affiche les changements effectués sur le fichier <code>&lt;file&gt;</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Apporter des changements</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>git add &lt;file&gt;</code> : ajoute le fichier <code>&lt;file&gt;</code> à l’<em>index</em></p>
+</li>
+<li>
+<p><code>git add .</code> : ajoute tous les fichiers modifiés à l’<em>index</em> (traverse les répertoires)</p>
+</li>
+<li>
+<p><code>git reset &lt;file&gt;</code> : enlève le fichier <code>&lt;file&gt;</code> de l’<em>index</em></p>
+</li>
+<li>
+<p><code>git commit -m "&lt;title&gt;"</code> : crée un commit avec toutes les modifications dans l’<em>index</em> avec le titre <code>&lt;title&gt;</code></p>
+</li>
+<li>
+<p><code>git commit --fixup &lt;hash&gt;</code> : crée un commit de correction d’un commit existant de hash <code>&lt;hash&gt;</code> avec toutes les modifications dans l’<em>index</em></p>
+</li>
+<li>
+<p><code>git rebase -i --autosquash &lt;hash&gt;</code> : initie un rebase interactif et déplace et marque les commits de correction pour les fusionner, jusqu’au commit de hash <code>&lt;hash&gt;</code> exclu</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Source : <a href="https://git-scm.com/docs" class="bare">https://git-scm.com/docs</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pour_les_utilisateurs_de_windows">1.1.2. Pour les utilisateurs de Windows</h4>
+<div class="paragraph">
+<p>Git est sensible au bit d’execution des fichiers (<code>chmod +x</code>).<br>
+<strong>Windows</strong> ne gérant pas de la même façon les permissions sur les fichiers qu’Unix, il est recommandé de désactiver cette sensibilité avec <code>git config core.fileMode false</code><br>
+Pour expliciter le fait qu’un fichier soit executable : <code>git update-index --chmod=+x &lt;file&gt;</code></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_concepts_utilisés_par_git">1.2. Concepts utilisés par Git</h3>
+<div class="paragraph">
+<p>On appelle <strong>remotes</strong> les serveurs distants configurés sur une copie locale.<br>
+Le remote par défaut est appelé <strong>origin</strong>.<br>
+Dans le cas où le dépôt a été cloné (et non initialisé) <strong>origin</strong> pointe sur l’url utilisée lors du <em>clone</em>.</p>
+</div>
+<div class="paragraph">
+<p>Git utilise une base de données (répertoire <strong>.git</strong>) qui contient l’arbre de toutes les modifications de chaque branche.<br>
+Celle-ci contient également la version des différents remotes.<br>
+Les branches en question sont accessibles avec le nom : <strong>&lt;remote_name&gt;/&lt;branch_name&gt;</strong>.<br>
+Par exemple <strong>origin/main</strong> est la branche <strong>main</strong> telle que le serveur <strong>origin</strong> la connaissait lors de la dernière synchronisation de la base de donnée.<br>
+Il est tout à fait possible d’avoir une (et une seule) version locale et plusieurs versions distantes d’une même branche différente.<br>
+Ce sera lors d’un push (envoi de l’historique local vers un remote) que ces versions deviendront les mêmes.</p>
+</div>
+<div class="paragraph">
+<p>La copie de travail (<strong>working copy</strong>) sont les fichiers contenus dans un dépôt local.<br>
+Il est possible de les modifier, d’en ajouter ou d’en supprimer, sans modifier les versions connues par Git.<br>
+Il sera, dans tous les cas, possible de revenir à une version connue par Git, grâce à la base de données.</p>
+</div>
+<div class="paragraph">
+<p>Afin de considérer les modifications opérées sur la copie de travail pour être historisées (embarquées dans un <em>commit</em>), il est nécessaire de les indexer.<br>
+L’<strong>index</strong> est l’espace accueillant les modifications qui seront comprises dans un commit.<br>
+Il est possible d’y ajouter des éléments (ajout, suppression ou modification de fichier) avec la commande <code>add</code>.<br>
+Y enlever des éléments se fait avec la commande <code>reset</code>.<br>
+Enfin la commande <code>status</code> fait apparaître dans des couleurs différentes les changements qui sont indexés et ceux qui ne le sont pas.<br>
+Par défaut les changements indexés sont en vert et les autres en rouge.<br>
+Réaliser un <em>commit</em> (commande <code>commit</code>), embarquera toutes les modifications vertes.</p>
+</div>
+<div class="sect3">
+<h4 id="_rebase">1.2.1. Rebase</h4>
+<div class="paragraph">
+<p>Une des fonctionnalités qui démarque Git de ses prédécesseurs est le <strong>rebase</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Le <strong>rebase</strong> peut être utilisé pour remettre à jour une branche quand la branche d’origine a changé.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">git fetch --all --prune # <b class="conum">(1)</b>
+git log --one-line -n 10 # <b class="conum">(2)</b>
+git rebase origin/main # <b class="conum">(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Récupère la base de donnée du remote par défaut (<strong>origin</strong>) pour toutes les branches</p>
+</li>
+<li>
+<p>Affiche les dix derniers commits de la branche courante</p>
+</li>
+<li>
+<p>Modifie l’historique de la branche courante en mettant les commits réalisés après la base à la suite des derniers commits de la branche <code>main</code> telle qu’elle est connue par <strong>origin</strong></p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/git_rebase.png" alt="git rebase">
+</div>
+</div>
+<div class="paragraph">
+<p>Le <strong>rebase</strong> peut également être utilisé en mode <em><strong>interactif</strong></em> pour modifier son historique local :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ajouter des modifications dans un commit</p>
+</li>
+<li>
+<p>Changer le nom d’un commit</p>
+</li>
+<li>
+<p>Fusionner des commits</p>
+</li>
+<li>
+<p>Supprimer des commits</p>
+</li>
+<li>
+<p>Ré-ordonner des commits</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Conseil</div>
+</td>
+<td class="content">
+Ne pas utiliser le rebase sur une branche partagée par plusieurs développeurs, et encore moins <code>main</code>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_maven">1.3. Maven</h3>
+<div class="paragraph">
+<p>Maven est un outil de construction de projet (Build Automation tool) autour de la JVM.</p>
+</div>
+<div class="paragraph">
+<p>Il permet entre autre d’orchestrer :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Gestion des dépendances</p>
+</li>
+<li>
+<p>Compilation des sources</p>
+</li>
+<li>
+<p>Lancement des tests</p>
+</li>
+<li>
+<p>Génération de la documentation</p>
+</li>
+<li>
+<p>Assemblage des binaires</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Sa grande extensibilité lui permet de s’adapter à différents languages (Java, Scala, Kotlin, etc.) et à différents scénarios (intégration continue, génération de code, déploiement, etc.).</p>
+</div>
+<div class="sect3">
+<h4 id="_structure_dun_projet">1.3.1. Structure d’un projet</h4>
+<div class="paragraph">
+<p>Maven propose de baser l’organisation d’un projet sur des conventions (nommage, structure des répertoires, etc.) plutôt que sur de la configuration pure comme ses prédécesseurs (Make, Ant, etc. ).</p>
+</div>
+<div class="paragraph">
+<p>Cette structure est composée de</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un fichier pom.xml qui contient toutes les informations nécessaires à Maven pour construire le projet. Sa structure minimale est la suivante</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Listing 1. Fichier pom.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.mycompany&lt;/groupId&gt; &lt;!--<b class="conum">(1)</b>--&gt;
+    &lt;artifactId&gt;my-app&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+
+    &lt;properties&gt; &lt;!--<b class="conum">(2)</b>--&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+    &lt;/properties&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Le triplet <code>groupId</code>, <code>artifactId</code> et <code>version</code> sont les coordonnées qui identifient un projet Maven et permettent des dépendances avec d’autres</p>
+</li>
+<li>
+<p>Section optionnelle, permettant de fixer l’encodage et la version de Java utilisée pour éviter des conflits par la suite</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un répertoire <strong>src</strong> qui contiendra tous les fichiers que l’on souhaite conserver dans le SCM</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Dans <strong>src</strong> on retrouve deux répertoires : <strong>main</strong> et <strong>test</strong> qui contiennent respectivement le code de production, et le code de test (code qui ne sera pas inclus dans les binaires produits lors de la phase de <strong><em>packaging</em></strong>)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Dans ces deux répertoires, on trouve un répertoire du nom du langage utilisé, dans cet exemple, <strong>java</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enfin dans ce<strong>s</strong> répertoire<strong>s</strong> <strong>java</strong> (ou <strong>groovy</strong>, etc.), on retrouve le code. Ce code est organisé en packages, eux-mêmes étant constitués de répertoires</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/maven_structure.png" alt="maven structure">
+</div>
+<div class="title">Figure 1. Structure d’un projet Maven</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cycle_de_vie_dun_projet_maven">1.3.2. Cycle de vie d’un projet Maven</h4>
+<div class="paragraph">
+<p>Par défaut Maven utilise un cycle de vie permettant à la grande majorité des projets d’être construit avec peu de configuration.</p>
+</div>
+<div class="paragraph">
+<p>Les principales <strong>phases</strong> sont :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>clean</strong> : nettoie les fichiers compilés ou générés</p>
+</li>
+<li>
+<p><strong>compile</strong> : compile les sources <em>principales (main)</em></p>
+</li>
+<li>
+<p><strong>test-compile</strong> : compile les sources de <em>test</em></p>
+</li>
+<li>
+<p><strong>test</strong> : lance les tests</p>
+</li>
+<li>
+<p><strong>package</strong> : construit le binaire (<strong>jar</strong> par défaut)</p>
+</li>
+<li>
+<p><strong>install</strong> : place le binaire dans le dépôt Maven local</p>
+</li>
+<li>
+<p><strong>deploy</strong> : place le binaire dans un dépôt Maven distant</p>
+</li>
+<li>
+<p><strong>site</strong> : génère la documentation</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Chaque phase est associable à un ou plusieurs <strong>plugins</strong>, ce qui rend Maven très extensible.</p>
+</div>
+<div class="paragraph">
+<p>Voici les associations par défaut :</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/maven_circle.png" alt="maven circle">
+</div>
+</div>
+<div class="paragraph">
+<p>Des plugins sont fournis directement par Maven, comme le <strong>maven-clean-plugin</strong>, qui supprime les fichiers compilés et générés.</p>
+</div>
+<div class="paragraph">
+<p>D’autres sont créés par la communauté sans voir besoin de modifier l’outil. Par exemple :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>cukedoctor-maven-plugin</strong> : produit une version HTML du résultat des tests Cucumber</p>
+</li>
+<li>
+<p><strong>sonar-maven-plugin</strong> : analyse le code avec différents outils (PMD, Checkstyle, JaCoCo, etc.) et publie les résultats vers un serveur Sonar</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Source : <a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html" class="bare">https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_balises_de_configuration">1.3.3. Balises de configuration</h4>
+<div class="paragraph">
+<p>Toutes les balises doivent être contenues dans le bloc <code>&lt;project&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>Dans les balises notables, on retrouve :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>properties</code> : cette balise contient des propriétés (clé et valeur) qui peuvent être utilisées par la suite, soit par convention par les plugins, soit explicitement avec  l’écriture <code>${my-property}</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;properties&gt;
+    &lt;my-test-lib.version&gt;1.2&lt;/my-test-lib.version&gt;
+&lt;/properties&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dependencies</code> : cette balise contient toutes les dépendances d’un projet sur d’autres (internes, externes, frameworks, bibliothèques, etc.)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt; &lt;!--<b class="conum">(1)</b>--&gt;
+        &lt;groupId&gt;com.mycompany&lt;/groupId&gt;
+        &lt;artifactId&gt;my-lib&lt;/artifactId&gt;
+        &lt;version&gt;1.45.3&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.mycompany&lt;/groupId&gt;
+        &lt;artifactId&gt;my-test-lib&lt;/artifactId&gt;
+        &lt;version&gt;${my-test-lib.version}&lt;/version&gt; &lt;!--<b class="conum">(2)</b>--&gt;
+        &lt;scope&gt;test&lt;/scope&gt; &lt;!--<b class="conum">(3)</b>--&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Le bloc <code>dependencies</code> est constitué de blocs <code>dependency</code> (singulier), chacun contenant les coordonnées d’une dépendance</p>
+</li>
+<li>
+<p>La valeur de la version fait référence à la propriété <code>my-test-lib.version</code>, donc <code>1.2</code></p>
+</li>
+<li>
+<p>Ce second bloc est indiqué avec le <strong><em>scope</em></strong> <code>test</code>, cette dépendance ne sera donc disponible que pour le code de test</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>build/plugins</code> : cette balise contient tous les plugins utilisés par le projet ainsi que leurs configurations</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt; &lt;!--<b class="conum">(1)</b>--&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt; &lt;!--<b class="conum">(2)</b>--&gt;
+            &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.22.2&lt;/version&gt;
+            &lt;configuration&gt; &lt;!--<b class="conum">(3)</b>--&gt;
+                &lt;failIfNoTests&gt;true&lt;/failIfNoTests&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>À l’instar de la balise <code>dependencies</code>, la balise <code>plugins</code> contient des blocs de <code>plugin</code> (singulier)</p>
+</li>
+<li>
+<p>Ici c’est le plugin <code>maven-surefire-plugin</code> qui est utilisé. Il s’agit du plugin par défaut pour lancer les tests. Un plugin est un projet Maven, et à ce titre est référencé grâce à ses coordonnées (<code>groupId</code>, <code>artifactId</code> et <code>version</code>) comme pour les dépendances</p>
+</li>
+<li>
+<p>La balise configuration permet de modifier le comportement du plugin, ici le plugin va faire échouer le build si aucun test n’est trouvé</p>
+</li>
+</ol>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>profiles</code> : cette balise permet d’ajouter des pans de configuration qui sont désactivables. Un profil peut ajouter des <code>properties</code>, des <code>dependencies</code>, des <code>plugins</code> et même des <code>modules</code> (utilisés pour les projets multi-modules)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;profiles&gt;
+    &lt;profile&gt;
+        &lt;id&gt;disable-tests&lt;/id&gt; &lt;!--<b class="conum">(1)</b>--&gt;
+        &lt;properties&gt;
+            &lt;maven.test.skip&gt;true&lt;/maven.test.skip&gt;
+        &lt;/properties&gt;
+    &lt;/profile&gt;
+&lt;/profiles&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Balise obligatoire, un profil doit avoir un <code>id</code>, ce qui permet de l’activer en ligne de commande, par exemple : <code>mvn install -P disable-tests</code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_junit">1.4. JUnit</h3>
+<div class="paragraph">
+<p>Java ne propose pas dans le JDK d’outils pour construire et exécuter des tests.</p>
+</div>
+<div class="paragraph">
+<p>Maven propose un répertoire de source, des phases (compilation &amp; exécution) et un scope pour gérer ce code qui n’est pas destiné à la production.<br>
+Cependant, Maven ne fourni pas directement d’outil pour déclarer ou exécuter ces tests.</p>
+</div>
+<div class="paragraph">
+<p>C’est là qu’entrent en jeu les frameworks de tests.<br>
+Il en existe plusieurs, et JUnit est aujourd’hui le plus répandu.</p>
+</div>
+<div class="sect3">
+<h4 id="_utilisation_de_lapi_de_junit_jupiter">1.4.1. Utilisation de l’API de JUnit-Jupiter</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class CalculatorTest {
+
+    private final Calculator calculator = new Calculator();
+
+    @Test // <b class="conum">(1)</b>
+    void simple_division() {
+        int result = calculator.divide(8).by(2); // <b class="conum">(2)</b>
+
+        Assertions.assertThat(result) // <b class="conum">(3)</b>
+            .as("division of 8 by 2")
+            .isEqualTo(4); // <b class="conum">(4)</b>
+    }
+
+    @Test
+    void division_by_zero_should_throw() {
+        Assertions.assertThatExceptionOfType(IllegalArgumentException.class) // <b class="conum">(5)</b>
+            .isThrownBy(() -&gt; calculator.divide(3).by(0)) // <b class="conum">(6)</b>
+            .withMessage("Cannot divide by zero"); // <b class="conum">(7)</b>
+    }
+
+    @ParameterizedTest // <b class="conum">(8)</b>
+    @CsvSource({
+        "0, 3, 3",
+        "3, 4, 7"
+    }) // <b class="conum">(9)</b>
+    void addition_cases(int a, int b, int expectedResult) { // <b class="conum">(10)</b>
+        int result = calculator.add(a).and(b);
+
+        Assertions.assertThat(result) // <b class="conum">(3)</b>
+            .as("addition of " + a + " and " + b)
+            .isEqualTo(expectedResult);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Méthode identifiée comme un test car marquée avec l’annotation <code>org.junit.jupiter.api.Test</code></p>
+</li>
+<li>
+<p>Élément déclencheur, du code de production est exécuté</p>
+</li>
+<li>
+<p>On vérifie le résultat du code de production (ici avec la bibliothèque <strong>AssertJ</strong>)</p>
+</li>
+<li>
+<p>Ces trois lignes forme une seule expression, le compilateur ne tenant pas compte des sauts de ligne. Ce genre d’écriture est appelé <strong>fluent interface</strong> et repose sur des appels consécutifs de méthodes de sorte à former des phrases. Ici littéralement : vérifie que la variable <code>result</code> en tant que "division of 8 by 2" est égal à 4</p>
+</li>
+<li>
+<p>Type différent de vérification, ici on vérifie qu’une erreur est produite, le test sera non passant si aucune erreur n’est produite ou si le type de l’erreur est différent de celui indiqué</p>
+</li>
+<li>
+<p>Une fonction est passée à l’API de vérification, elle sera exécutée par la bibliothèque, dans un bloc <code>try / catch</code></p>
+</li>
+<li>
+<p>Vérification du message de l’erreur, si le message ne correspond pas, le test sera non passant</p>
+</li>
+<li>
+<p>Méthode identifiée comme un test paramétré, elle sera exécutée autant de fois qu’il y a de jeux de données. La méthode dans cet exemple sera exécutée 2 fois.</p>
+</li>
+<li>
+<p>Le jeu de donnée, ici passé comme un CSV (Comma Separated Values), d’autres sources de données sont possibles.</p>
+</li>
+<li>
+<p>La méthode prend donc des paramètres dont le nombre correspond aux données dans les jeux de données. L’ordre des paramètres doit correspondre à l’ordre des données.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comment_junit_fonctionne_avec_maven">1.4.2. Comment JUnit fonctionne avec Maven</h4>
+<div class="paragraph">
+<p><strong>JUnit-Jupiter</strong> défini plusieurs choses :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Une API pour déclarer une méthode comme étant un test (<code>@Test</code>, etc.)</p>
+</li>
+<li>
+<p>Un moteur d’exécution qui sait détecter les tests et les lancer</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>JUnit fourni également un lanceur de moteur(s) d’exécution : <strong>junit-platform-launcher</strong></p>
+</div>
+<div class="paragraph">
+<p>Enfin, le plugin <strong>maven-surefire-plugin</strong> "sait" se connecter (entre autres) à ce <em>launcher</em> (depuis la version 2.22.0).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Pour résumer :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>La phase <strong>test</strong> de Maven est associé au plugin <strong>maven-surefire-plugin</strong></p>
+</li>
+<li>
+<p>Ce plugin peut lancer <strong>junit-platform-launcher</strong> (si cette bibliothèque est présente sur le classpath)</p>
+</li>
+<li>
+<p>Ce <em>launcher</em> peut lancer les moteurs d’exécutions construits avec l’API de moteur d’exécution <strong>junit-platform-engine</strong>, notamment <strong>JUnit-Jupiter</strong></p>
+</li>
+<li>
+<p><strong>JUnit-Jupiter</strong> sait détecter et lancer les tests déclarés avec son API</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_un_peu_dhistoire">1.4.3. Un peu d’histoire</h4>
+<div class="paragraph">
+<p>JUnit est un vieux framework (1997) et celui-ci a beaucoup évolué au fil des versions de Java.<br>
+La version 4, arrivée en 2006 (après Java 1.5) a longtemps été utilisée, du fait de la simplicité d’écriture apportée par le support des annotations (<code>@Test</code>).<br>
+En 2015, une campagne de financement participatif est lancée pour créer JUnit<strong>5</strong>, une réécriture totale du framework.</p>
+</div>
+<div class="paragraph">
+<p>Le constat de l’équipe est que le côté monolithique qui a jusque-là prévalu, a amené des dérives dans l’API du framework, qui est à la fois permissive et très complexe.</p>
+</div>
+<div class="paragraph">
+<p>En effet, si le point de départ d’un test est conventionnellement une méthode, des plugins voient le jour pour changer ce paradigme (Cucumber, etc.), où un test peut-être un paragraphe dans un fichier texte.</p>
+</div>
+<div class="paragraph">
+<p>Par ailleurs, même s’il existe plusieurs points d’extension dans cette version 4, le plus utilisé est le <code>Runner</code>, qui a le défaut de ne pas être composable.<br>
+Cela demande aux équipes fournissant des plugins de fournir des outils qui fonctionnent depuis plusieurs points d’extensions (<code>Runner</code>, <code>Rule</code>, initialisation dans une méthode de <code>setUp</code>, etc.) pour contourner ce défaut</p>
+</div>
+<div class="paragraph">
+<p>L’équipe de JUnit5 estime que chaque paradigme devrait avoir sa propre API et son propre moteur d’exécution, pour que le code soit plus spécifique, et donc plus simple.</p>
+</div>
+<div class="paragraph">
+<p>L’architecture résultante est la suivante :</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/junit5_architecture.png" alt="junit5 architecture">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>JUnit-platform</strong> est un framework pour construire (et lancer) des moteurs d’exécutions.</p>
+</div>
+<div class="paragraph">
+<p><strong>JUnit-Vintage</strong> est un moteur d’exécution qui est compatible avec l’API de JUnit4.</p>
+</div>
+<div class="paragraph">
+<p><strong>JUnit-Jupiter</strong> est le moteur d’exécution d’une nouvelle API qui profite (entre autres) de points d’extension multiples et composables.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_le_découplage_un_concept_valide_a_toutes_les_échelles">2. Le Découplage, un concept valide a toutes les échelles</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+J’ai répondu à leur problème en leur proposant d’ajouter un nouveau niveau d’indirection.
+</blockquote>
+<div class="attribution">
+&#8212; un architecte qui passait par là
+</div>
+</div>
+<div class="paragraph">
+<p>L’objectif qui prévaut sur tous les autres est la <strong>maintenabilité</strong>.<br>
+En cas de problème, lié à la performance, à la sécurité ou au fonctionnement d’un logiciel, la solution doit tendre vers un impact minimum.<br>
+Plus le changement de code est important, et plus le risque augmente, et plus le temps nécessaire à la mise en production se rallonge.<br>
+Une correction (mais cela vaut pour une évolution également) doit comporter le moins de risque possible.</p>
+</div>
+<div class="paragraph">
+<p>Réduire l’inertie entre la conception et la mise en production, c’est augmenter la maitrise et la confiance de l’équipe dans le code produit.</p>
+</div>
+<div class="sect2">
+<h3 id="_à_léchelle_dune_classe_java">2.1. À l’échelle d’une classe Java</h3>
+<div class="sect3">
+<h4 id="_exemple_1_état_interne_différent_du_contrat_public">2.1.1. Exemple 1 : État interne différent du contrat public</h4>
+<div class="paragraph">
+<p>Considérant cette classe :</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 2. Fichier TrafficLight.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class TrafficLight {
+
+    private int color;
+
+    public void setColor(int newColor) {
+        this.color = newColor;
+    }
+
+    public int getColor() { // <b class="conum">(1)</b>
+        return color;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Changer le type de la représentation interne (<code>int</code>) demandera d’adapter l’ensemble du code qui utilise cette classe</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>La classe pourrait être réécrite de façon à <span class="underline">découpler</span> :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>d’une part, la représentation interne de l’état de cet objet (un <code>int</code>)</p>
+</li>
+<li>
+<p>d’autre part, le contrat <code>public</code> utilisable par les autres classes</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Listing 3. Fichier TrafficLight.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class TrafficLight {
+
+    private int color;
+
+    public Color nextState() {
+        color = (color + 1) % 3;
+        return Color.values()[color];
+    }
+
+    public enum Color {
+        GREEN,
+        ORANGE,
+        RED,
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exemple_2_paramètres_de_méthode_dont_les_types_correspondent_au_domaine">2.1.2. Exemple 2 : Paramètres de méthode dont les types correspondent au domaine</h4>
+<div class="paragraph">
+<p>Considérant cette interface :</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 4. Fichier PersonRepository.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">interface PersonRepository {
+
+    void savePerson(String firstname, String lastname, int birthYear, int birthMonth);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>À l’usage, il est simple d’inverser un paramètre avec un autre car leurs types sont identiques.<br>
+Ainsi la compilation ne va pas aider à détecter un bug, où le mois et l’année sont inversées par exemple.<br>
+Il s’agit d’un <em>couplage de position</em>.<br>
+Un meilleur design pourrait être :</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 5. Fichier PersonRepository.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">interface PersonRepository {
+
+    Person savePerson(Person person);
+
+    @RecordBuilder // <b class="conum">(1)</b>
+    record Person(String firstname, String lastname, YearMonth birthMonth) {}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Utilisation de la bibliothèque <strong>io.soabase.record-builder:record-builder</strong> pour générer un <em>builder</em> correspondant</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Il est maintenant difficile de se tromper en écrivant :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Person person = PersonBuilder.builder()
+    .firstname("Bobby")
+    .lastname("Singer")
+    .birthMonth(YearMonth.of(1962, Month.DECEMBER))
+    .build();
+
+repository.savePerson(person);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exemple_3_contrat_public_extrait_dans_une_interface">2.1.3. Exemple 3 : Contrat public extrait dans une interface</h4>
+<div class="paragraph">
+<p>L’intérêt des interfaces est de décorréler le contrat public de l’implémentation concrète afin de pouvoir :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Substituer un objet par un autre (implémentant la même interface) sans modifier le code appelant</p>
+</li>
+<li>
+<p>Cacher l’implémentation (méthodes et champs de l’objet non présents dans l’interface) dans le code appelant</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Le concept de <code>Logger</code>, largement utilisé dans l’informatique de gestion est une abstraction pour envoyer un message <em>quelque part</em>.<br>
+Du point de vue du code métier, peu importe ce "<em>quelque part</em>".</p>
+</div>
+<div class="paragraph">
+<p>Cette abstraction est une interface, par exemple :</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 6. Fichier Logger.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">interface Logger {
+
+    void log(Level level, String message);
+
+    enum Level {
+        INFO,
+        WARNING,
+        ERROR,
+        ;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Et s’utilise de cette manière :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">record CoffeeShop(CoffeeMaker coffeeMaker, Logger logger) {
+
+    public Cup makeCoffee(String firstname) {
+        if(!coffeeMaker.isReady()) {
+            logger.log(Level.WARN, "Tried to make some coffee, but the coffee maker is not ready yet");
+            return Cup.EMPTY;
+        }
+        Cup cup = new Cup(firstname);
+        coffeeMaker.pourIn(cup);
+        logger.log(Level.INFO, "Made coffee for " + firstname + ", careful it’s hot !");
+        return cup;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Passer une implémentation de <code>Logger</code> qui écrit dans</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>la sortie standard</p>
+</li>
+<li>
+<p>un fichier</p>
+</li>
+<li>
+<p>une base de données</p>
+</li>
+<li>
+<p>un broker de message</p>
+</li>
+<li>
+<p>un mélange de toutes ces possibilités</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>ne changera pas le code de la classe <code>CoffeeShop</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_différentes_formes_de_couplage">2.1.4. Différentes formes de couplage</h4>
+<div class="paragraph">
+<p>Différentes formes de couplages peuvent être retrouvées ici : <a href="https://connascence.io/" class="bare">https://connascence.io/</a></p>
+</div>
+<div class="paragraph">
+<p>La plupart des couplages peuvent être évités en utilisant le code produit en même temps qu’il est créé.<br>
+La technique la plus simple est de suivre les principes du <strong>TDD</strong> (Test Driven Development) ou développement piloté par les tests.</p>
+</div>
+<div class="paragraph">
+<p>La pratique du TDD consiste à écrire un test <em>minimal</em> avant d’écrire le code de production <em>minimal</em> qui le fait passer.<br>
+Le code produit, répondant strictement aux cas de tests réalisés, est par construction validé par les tests et utilisable facilement (car déjà utilisé dans les tests).</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>1) Write <span class="underline">NO</span> production code except to pass a failing test<br>
+2) Write only <span class="underline">enough</span> of a test to demonstrate a failure<br>
+3) Write only <span class="underline">enough</span> production code to pass the test</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; Robert "Uncle Bob" Martin<br>
+<cite>Three laws of TDD</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>Le fait d’écrire un test minimal est très important car on souhaite, dans la pratique du TDD, écourter au maximum le temps d’une itération entre les différentes phases :</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/tdd_red_green_blue.png" alt="tdd red green blue">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a_léchelle_dune_application">2.2. A l’échelle d’une application</h3>
+<div class="sect3">
+<h4 id="_découplage_métier">2.2.1. Découplage métier</h4>
+<div class="paragraph">
+<p>Une application touche la plupart du temps à plusieurs concepts métiers distincts.</p>
+</div>
+<div class="paragraph">
+<p>Dans une application de commerce électronique on peut retrouver, la gestion du catalogue, le descriptif d’un produit, le détail du panier, le paiement, la facturation, etc.</p>
+</div>
+<div class="paragraph">
+<p>Ces domaines ont des liens entre eux, mais peuvent évoluer indépendamment les uns des autres.<br>
+Le code doit retranscrire ces liaisons, mais aussi cette indépendance.<br>
+Le fait de modifier la gestion du panier n’aura (ou ne devrait) pas avoir d’impact sur le paiement.</p>
+</div>
+<div class="paragraph">
+<p>Mettre en place le découplage entre les composants d’une application permet de diminuer le risque en cas de changement, et d’évaluer plus finement les impacts afin de savoir où mettre l’accent sur les tests par exemple.</p>
+</div>
+<div class="paragraph">
+<p>Ce genre de découplage nécessite une compréhension profonde des domaines métiers en jeu, pour trouver les points d’interconnexion entre eux et créer un modèle dédié à chaque domaine avec les informations nécessaires à ces échanges.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_découplage_technique">2.2.2. Découplage technique</h4>
+<div class="paragraph">
+<p>De la même façon, il est intéressant de séparer le code dit <em>métier</em> (c’est-à-dire qui contient les règles métiers), du code technique.<br>
+On parle de code technique quand celui-ci ne porte pas directement de règle métier, par exemple l’interfaçage avec le monde extérieur au travers d’une</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>API</p>
+</li>
+<li>
+<p>Interface graphique</p>
+</li>
+<li>
+<p>Connexion à un broker de message</p>
+</li>
+<li>
+<p>Connexion à une base de données</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Il est possible de construire le <em>coeur</em> applicatif sans l’aide de framework ou autre bibliothèque afin de simplifier l’écriture des tests et de réduire à sa plus simple forme le code <em>métier</em>.</p>
+</div>
+<div class="paragraph">
+<p>On pourra venir par la suite y brancher des <em>connecteurs</em> qui feront le pont entre ce code et le reste du système ou les utilisateurs.</p>
+</div>
+<div class="paragraph">
+<p>Une de ces approche est l’<span class="underline">architecture hexagonale</span> que nous verrons en détail un peu plus loin.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a_léchelle_dun_ensemble_dapplication">2.3. A l’échelle d’un ensemble d’application</h3>
+<div class="paragraph">
+<p>Les considérations a cette échelle sont valables pour un SI (système d’information).</p>
+</div>
+<div class="paragraph">
+<p>Dans un système d’information, il est courant que plusieurs applications, opérées par des équipes distinctes doivent échanger des données.</p>
+</div>
+<div class="paragraph">
+<p>Les choix d’architectures réalisés dans ce cadre doivent aussi bien prendre en compte les objectifs énumérés en introduction (Maintenabilité, Testabilité, Sécurité, etc.) que les frictions entre les équipes.</p>
+</div>
+<div class="paragraph">
+<p>Les équipes qui travaillent sur des applications différentes sont constituées d’hommes et de femmes qui ont des façons de travailler différentes (agile, cycle en V, etc.), des rythmes différents (décalage horaire, temps partiel, etc.), des façons d’opérer la production différentes (avec ou sans coupure de service, livraison continue, ou par lot, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Ces équipes n’ont pas forcément la même maturité technique non plus.</p>
+</div>
+<div class="paragraph">
+<p>Il est important de prendre en compte ces éléments pour protéger le service rendu et fluidifier les échanges entre équipes au maximum.</p>
+</div>
+<div class="sect3">
+<h4 id="_exemple_1_communication_asynchrone">2.3.1. Exemple 1 : communication asynchrone</h4>
+<div class="paragraph">
+<p>Considérant une application soumise à de forts traffics de manière irrégulière, comme un site de simulation de crédit immobilier qui sera consulté massivement entre 12 h et 14 h à la pause déjeuner.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/mortgage_system_http.png" alt="mortgage system http">
+</div>
+</div>
+<div class="paragraph">
+<p>Le site public recueille les demandes de simulation et les envoie à un service interne qui doit :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Se connecter régulièrement à des APIs externes de différentes banques pour maintenir des bases de calcul précises</p>
+</li>
+<li>
+<p>Faire ces calculs (imaginons-les lents pour l’intérêt de l’exercice) sur la base des informations données par les clients</p>
+</li>
+<li>
+<p>Renvoyer la simulation au site public</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Même s’il y a peu de traffic, une interruption de service de quelques minutes peut être dommageable, et faire perdre des clients ou de la visibilité.</p>
+</div>
+<div class="paragraph">
+<p>Cependant si la communication entre le site public et le service interne est synchrone, une mise à jour de ce dernier entraînerait <em>de facto</em> une coupure de service du site public ou une perte d’information.</p>
+</div>
+<div class="paragraph">
+<p>Il peut être intéressant d’établir une communication asynchrone au travers d’un broker de message qui fera tampon entre les deux systèmes.<br>
+Ainsi il n’y aura ni coupure de service <em>visible</em> ni perte d’information.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/mortgage_system_amqp.png" alt="mortgage system amqp">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exemple_2_lisser_la_charge">2.3.2. Exemple 2 : lisser la charge</h4>
+<div class="paragraph">
+<p>Dans la continuité du système décrit ci-dessus, considérant que le broker de message est couplé à l’applicatif côté service pour des raisons historiques ou de maturité technologique (server applicatif + fournisseur d’API JMS par exemple).</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/mortgage_system_bad_bad_jms.png" alt="mortgage system bad bad jms">
+</div>
+</div>
+<div class="paragraph">
+<p>Envoyer beaucoup de message d’un coup (on parle de <em>coup de bélier</em>) à un tel système pourrait diminuer ses performances voir provoquer son arrêt / crash.</p>
+</div>
+<div class="paragraph">
+<p>Il peut être dans ce cas plus simple que ce soit l’application cliente (celle qui envoie les messages) qui lisse la charge (on parle aussi de <em>throttling</em>), pour éviter le couplage de pression entre les deux applications.</p>
+</div>
+<div class="paragraph">
+<p>Mettre en place ce mécanisme requiert de définir une vitesse maximum (en message/sec par exemple) et de la respecter.<br>
+Il existe plusieurs manières de construire un tel système, par exemple avec</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un batch qui va lire à interval régulier les X plus vieux messages dans une base de donnée (attention cependant, un système de batch <em>scale</em> difficilement)</p>
+</li>
+<li>
+<p>Une petite application dont l’état n’est pas géré dans sa mémoire (mais plutôt dans une base de donnée, de façon à pouvoir scaler si nécessaire)</p>
+</li>
+<li>
+<p>Les fonctionnalités de certains brokers</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quelques_types_darchitecture">3. Quelques types d’architecture</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Les organisations qui conçoivent des systèmes (informatiques) tendent inévitablement à produire des designs qui sont des copies de la structure de communication de leur organisation.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; attribuée à Melvin Conway<br>
+<cite>Loi de Conway</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>Tout à un coût, et le temps de développement a souvent un coup plus élevé que le reste.</p>
+</div>
+<div class="paragraph">
+<p>La direction que prend une architecture applicative doit permettre de faire correspondre le coût du développement avec le gain espéré et donc la stratégie de l’entreprise.</p>
+</div>
+<div class="paragraph">
+<p>Au-delà de l’aspect mercantile de la chose, il est également plus <em>agréable</em> d’ajouter de nouvelles fonctionnalités, que de gérer une friction entre équipe ou de multiples bugs.</p>
+</div>
+<div class="paragraph">
+<p>L’architecture applicative doit donc tenir compte des cycles de développement pour concentrer l’énergie sur la valeur ajoutée.</p>
+</div>
+<div class="sect2">
+<h3 id="_n_tiers">3.1. N-tiers</h3>
+<div class="paragraph">
+<p>L’architecture N-tiers est un découpage en couches techniques d’une application.</p>
+</div>
+<div class="paragraph">
+<p>Pour une application simple (API HTTP d’un côté, base de donnée de l’autre par exemple), on retrouve souvent <strong>3</strong> tiers :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>La couche des <span class="underline">contrôleurs</span> dont la responsabilité est de</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Communiquer en HTTP(S)</p>
+</li>
+<li>
+<p>Sécuriser l’accès (Authentification et Authorisation)</p>
+</li>
+<li>
+<p>Sérialiser ou désérialiser la donnée représentée par des objets <em>anémiques</em> (DTO pour Data Transfer Object)</p>
+</li>
+<li>
+<p>Réaliser des contrôles de surface notamment sur la structure des données envoyées et reçues</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>La couche des <span class="underline">services</span> dont la responsabilité est de</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Fournir aux contrôleurs des traitements métiers de haut niveau afin qu’aucune logique métier ne soit nécessaire en amont</p>
+</li>
+<li>
+<p>Valider la cohérence des données et le respect des règles <em>métiers</em></p>
+</li>
+<li>
+<p>(Gérer les transactions, si la base de donnée est transactionnelle)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>La couche de <span class="underline">persistence</span> (on parle aussi de <em>repositories</em>) dont la responsabilité est de</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Communiquer avec une base de donnée</p>
+</li>
+<li>
+<p>Sérialiser ou désérialiser la donnée représentée par des objets <em>anémiques</em> (DTO pour Data Transfer Object)</p>
+</li>
+<li>
+<p>Interpréter les erreurs techniques de la base de données pour être gérées par un traitement métier dans la couche service</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/n_tiers.png" alt="n tiers">
+</div>
+</div>
+<div class="paragraph">
+<p>Historiquement, cette architecture est appliquée telle-quelle à l’ensemble de la base de code d’un projet informatique et apporte de la confusion sur les différents domaines métiers.</p>
+</div>
+<div class="paragraph">
+<p>Il est plus intéressant d’introduire un découpage qui correspond aux différents domaines.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/n_tiers_tree_lvl1.png" alt="n tiers tree lvl1">
+</div>
+</div>
+<div class="paragraph">
+<p>Ainsi le fonctionnement de l’application est plus clair, et cela évite de mélanger par inadvertance des composants entre les domaines.</p>
+</div>
+<div class="paragraph">
+<p>Par ailleurs rien n’empêche de structurer le code d’un domaine en suivant ce découpage technique.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/n_tiers_tree_lvl2.png" alt="n tiers tree lvl2">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hexagonale">3.2. Hexagonale</h3>
+<div class="paragraph">
+<p>L’<strong>architecture hexagonale</strong> vise à séparer le code <em>métier</em> du code <em>technique</em>.</p>
+</div>
+<div class="paragraph">
+<p>Pour cela on distingue le coeur (<em>core</em>) de l’application, des <em>adaptateurs</em> (<em>adapters</em>) qui font le lien entre le code <em>métier</em> et le reste du monde ; que ce soit via des communications <em>machine-to-machine</em> (HTTPS, MQTT, etc.) ou <em>human-to-machine</em> (interface graphique, email, SMS, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Les objectifs sont les suivants :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Découpler les problématiques techniques en dehors du code qui contient les règles métiers</p>
+</li>
+<li>
+<p>Simplifier les tests unitaires du code métier, du fait de l’absence de frameworks et bibliothèques</p>
+</li>
+<li>
+<p>Permettre (théoriquement) de remplacer un <em>adaptateur</em> sans modifier le reste de l’application. Dans la pratique, ce cas arrive assez peu et le cas échéant, le changement de paradigme qui y est souvent associé (SQL &#8660; NOSQL, synchrone &#8660; asynchrone) nécessite de revoir l’architecture de l’application.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/hexagonal_architecture.png" alt="hexagonal architecture">
+</div>
+</div>
+<div class="paragraph">
+<p>On appelle :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>API</strong> (<strong>A</strong>pplication <strong>P</strong>rogramming <strong>I</strong>nterface) une interface qui est <span class="underline">implémentée par le code métier</span>, et est appelée par un adaptateur</p>
+</li>
+<li>
+<p><strong>SPI</strong> (<strong>S</strong>ervice <strong>P</strong>rovider <strong>I</strong>nterface) une interface qui est appelée par le code métier, et est <span class="underline">implémentée par un adaptateur</span>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>On commence une application qui suit les principes de l’architecture hexagonale par le code d’un domaine métier / fonctionnalité.</p>
+</div>
+<div class="paragraph">
+<p>Ce code ne doit contenir aucune dépendance vers un framework ou une bibliothèque.</p>
+</div>
+<div class="paragraph">
+<p>À cette fin, il est plus simple de l’isoler dans un module dédié de sorte que ce code n’ait en pratique aucune dépendance (<em>classpath</em> vide).</p>
+</div>
+<div class="paragraph">
+<p>Par la suite d’autres modules peuvent être ajoutés contenant le code des adaptateurs, ces modules auront une dépendance sur le module coeur.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_monolithique_vs_micro_services">3.3. Monolithique vs micro-services</h3>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>I’ll keep saying this&#8230;&#8203; if people can’t build monoliths properly, microservices won’t help.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; Simon Brown<br>
+<cite>@simonbrown</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>L’approche monolithique consiste à former une seule application avec la totalité des fonctionnalités.</p>
+</div>
+<div class="paragraph">
+<p>Ce qui peut impliquer de <em>mélanger</em> plusieurs domaines métiers, en reprenant l’exemple d’un site de commerce électronique : gestion du catalogue, détail du panier, paiement, facturation, etc.</p>
+</div>
+<div class="paragraph">
+<p>Il est nécessaire de structurer le code d’une application monolithique en <em>modules</em> pour isoler les parties du code qui n’ont pas à interagir entre elles.</p>
+</div>
+<div class="paragraph">
+<p>Le risque dans le cas où une telle structure n’est pas mise en place est de voir la complexité de l’application augmenter de manière exponentielle à chaque ajout de fonctionnalité.<br>
+On parle dans ce cas de code <em>spaghetti</em>.<br>
+La métaphore des <em>spaghettis</em> vient des morceaux de code entrelacés, mélangés, ce qui les rend difficiles à tester en isolation du fait des nombreuses interactions entre les domaines voir les couches (au sens N-tiers).</p>
+</div>
+<div class="paragraph">
+<p>L’approche micro-service a ceci de différent que les différents domaines sont gérés par des applications différentes.</p>
+</div>
+<div class="paragraph">
+<p>Même s’il est toujours possible de partager du code au travers de bibliothèques communes, il est nécessaire, comme dans un monolithe de ne pas mélanger les domaines.<br>
+Une des règles qui transcrit le mieux ce principe est le fait que les bases de données soient distinctes pour chaque micro-service.<br>
+Cette règle permet également d’éviter un couplage au niveau du modèle de donnée.</p>
+</div>
+<div class="paragraph">
+<p>De même, si des micro-services doivent communiquer entre eux, il est préférable que ce soit de manière asynchrone (à travers un broker de message par exemple).</p>
+</div>
+<div class="paragraph">
+<p>Ainsi la coupure d’un service n’affecte pas les autres.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/micro_services_ecommerce.png" alt="micro services ecommerce">
+</div>
+</div>
+<div class="paragraph">
+<p>Une architecture basée sur les microservices a des inconvénients :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Plusieurs applications différentes doivent être déployées fréquemment</p>
+<div class="ulist unstyled">
+<ul class="unstyled">
+<li>
+<p>&#8594; La livraison et le déploiement doivent être robustes et automatisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Il est plus difficile d’investiguer un problème, pouvant être lié à une succession d’évènements dans différentes applications</p>
+<div class="ulist unstyled">
+<ul class="unstyled">
+<li>
+<p>&#8594; Les logs doivent être uniques, informatives et centralisées</p>
+</li>
+<li>
+<p>&#8594; Une solution de traçage des appels doit être mise en place (correlation-id, header via, APM, etc.)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le coût en infrastructure est plus élevé, car il y a plus d’applications actives et d’organes techniques pour les interconnexions</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Et a des avantages :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Le code d’un micro-service est plus petit, plus simple</p>
+</li>
+<li>
+<p>Les micro-services peuvent évoluer indépendamment les uns des autres, et être développés par des équipes différentes dans des <em>repositories</em> différents</p>
+</li>
+<li>
+<p>Les micro-services peuvent être dimensionnés indépendamment</p>
+<div class="ulist unstyled">
+<ul class="unstyled">
+<li>
+<p>&#8594; Si le domaine <em>produit</em> de notre site de commerce électronique est plus sollicité que le domaine <em>paiement</em>, il sera possible d’affecter plus ressources à celui-ci sans en dépenser inutilement pour les services faiblement sollicités</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dimensionnement_considérations_relatives">4. Dimensionnement &amp; considérations relatives</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Historiquement, la construction d’application monolithique et dont l’état est géré en mémoire (<em>stateful</em>) nécessitait avec l’augmentation de la charge des serveurs plus puissants.</p>
+</div>
+<div class="paragraph">
+<p>Il s’agissait donc d’augmenter</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>RAM (mémoire)</p>
+</li>
+<li>
+<p>Fréquence CPU</p>
+</li>
+<li>
+<p>Nombre de coeur CPU</p>
+</li>
+<li>
+<p>Taille du disque dur</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Dans ce cas, on parle de <strong>dimensionnement vertical</strong>.<br>
+Il se trouve que le coût du matériel n’est pas proportionnel à la puissance, mais plutôt exponentiel.<br>
+Ce type de dimensionnement (ou <em>scaling</em>) arrive donc rapidement à une limite technique (puissance maximale des CPUs à une époque, etc.) ou financière.</p>
+</div>
+<div class="paragraph">
+<p>Certains systèmes, comme les bases de données SQL traditionnelles (Oracle, PostgreSQL, MariaDB, etc.) ne peuvent augmenter leurs capacités que de cette manière.</p>
+</div>
+<div class="paragraph">
+<p>À l’inverse, les applications peuvent être structurées de manière à pouvoir être dimensionnées différemment.</p>
+</div>
+<div class="paragraph">
+<p>On parle dans ce cas de <strong>dimensionnement horizontal</strong>, qui consiste à augmenter le nombre de conteneurs / vms / serveurs pour augmenter de manière linéaire le nombre d’appels que le système peut traiter.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/vertical_vs_horizontal_scaling.png" alt="vertical vs horizontal scaling">
+</div>
+</div>
+<div class="paragraph">
+<p>Un autre aspect négatif de l’approche instance unique est que tout changement nécessitant un redémarrage de l’application (configuration, nouvelle version, etc.) interrompt le service rendu.</p>
+</div>
+<div class="paragraph">
+<p>Dans le cas où il y a plusieurs instances d’une même application, que ce soit derrière un <strong>répartiteur de charge</strong> (<em>load-balancer</em>) ou qu’elles consomment les messages d’un broker, en éteindre une ne coupe pas le service.</p>
+</div>
+<div class="paragraph">
+<p>Il est tout à fait possible de configurer le <strong>répartiteur de charge</strong> afin de ne plus distribuer de connexion vers une instance, de laisser les connexions existantes se terminer et enfin de pouvoir éteindre l’instance sans impact pour les utilisateurs.</p>
+</div>
+<div class="paragraph">
+<p>Traiter toutes les instances d’une même application comme celà pour réaliser une mise à jour est appelé <strong>rolling update</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Attention toutefois à ce que les systèmes connectés à l’application (clients d’une API, base de données, etc.) puissent fonctionner avec les deux versions qui vont cohabiter durant la mise à jour.</p>
+</div>
+<div class="sect2">
+<h3 id="_identifier_les_spofs">4.1. Identifier les SPOFs</h3>
+<div class="paragraph">
+<p>Les SPOFs (<strong>S</strong>ingle <strong>P</strong>oint <strong>O</strong>f <strong>F</strong>ailure) sont les parties d’un système qui ne peuvent pas avoir plus d’une instance et qui par conséquent entrainent une coupure de service en cas d’arrêt (crash, mise à jour, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Il est important de les identifier et de monitorer leur état pour pouvoir réagir en cas de problème.</p>
+</div>
+<div class="paragraph">
+<p>Cette réaction peut être automatique (bascule sur un réplica jusque-là passif) ou manuelle (démarrage de services alternatifs).</p>
+</div>
+<div class="paragraph">
+<p>Tenir compte des SPOFs peut également influer sur l’architecture du système pour limiter au strict minimum la charge qui y est envoyée, ou mettre en place des mécanismes pour alléger cette charge (un cache de données par exemple).</p>
+</div>
+<div class="paragraph">
+<p>Ces considérations sont applicables à tout système dont on voudrait diminuer l’usage (une API extérieure payante par exemple) et rejoigne de même concept de découplage (diminuer les dépendances entres composants).</p>
+</div>
+<div class="paragraph">
+<p>Les bases de données (SQL) sont également souvent des SPOFs ; il est cependant possible dans la plupart des cas de mettre en place des réplicas pouvant remplacer la base principale en cas d’indisponibilité.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/pg_auto_failover.png" alt="pg auto failover">
+</div>
+<div class="title">Figure 2. Mécanisme de bascule pour PostgreSQL (<code>pg_auto_failover</code>)</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_identifier_les_points_de_contention">4.2. Identifier les points de contention</h3>
+<div class="paragraph">
+<p>Quand un système est soumis à de fortes charges, des points de contention (ou goulot d’étranglement) peuvent apparaître.</p>
+</div>
+<div class="paragraph">
+<p>Il s’agit de partie de système dont la vitesse de traitement est plus lente et qui constitue la vitesse maximale du système dans son ensemble.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+À l’instar d’un système d’écoulement d’eaux pluviales, si un des tuyaux a un faible débit, c’est tout le système qui est plus lent, et qui risque l’engorgement
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Ces points de contention peuvent provoquer des réactions en chaîne ou en cacher d’autres.</p>
+</div>
+<div class="paragraph">
+<p>Pour les identifier et si nécessaire les améliorer, il est nécessaire d’avoir une supervision précise des différents composants du système.<br>
+La supervision est constituée entre autres, d’un ensemble de sondes qui permettent de relever des données à interval régulier et d’en faire des courbes.<br>
+Ces courbes témoignent de l’évolution du système dans le temps et permettent de faire la corrélation entre des évènements exogènes et des conséquences endogènes, notamment l’apparition de points de contention.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_répartir_la_charge">4.3. Répartir la charge</h3>
+<div class="sect3">
+<h4 id="_pour_les_communications_synchrones">4.3.1. Pour les communications synchrones</h4>
+<div class="paragraph">
+<p>Pour distribuer la charge sur plusieurs instances d’un même service, on utilise des répartiteurs de charge qu’ils soient matériel (F5, Altéon, etc.) ou logiciel (HAProxy, Nginx, Traefik, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Il existe différentes configurations possibles, notamment pour affecter des poids aux nœuds cibles ou établir une affinité de session (<em>sticky session</em>).</p>
+</div>
+<div class="paragraph">
+<p>Les répartiteurs de charge logiciels sont plus simples à configurer et peuvent même être pilotés par une API.<br>
+Cela permet notamment d’automatiser des opérations telles que le <strong>rolling update</strong> précédemment mentionné.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pour_les_communications_asynchrones">4.3.2. Pour les communications asynchrones</h4>
+<div class="paragraph">
+<p>Pour ce qui est des communications asynchrones, on va tendre le plus possible vers l’utilisation d’un <em>broker de message</em> qui fera le tampon entre les applications communicantes.</p>
+</div>
+<div class="paragraph">
+<p>Un certain nombre d’outils peuvent être mis en place pour rendre un broker <em>hautement disponible</em> (<strong>H</strong>igh <strong>A</strong>vailability) et capable d’ingérer de grosses volumétries.</p>
+</div>
+<div class="paragraph">
+<p>Ce faisant, le broker pourra accueillir les éventuels coups de béliers (très grosses charges temporaires) sans redistribuer la pression aux applications clientes.</p>
+</div>
+<div class="paragraph">
+<p>En effet, quand deux systèmes communiquent, il est préférable de fonctionner en <em>flux tiré</em> de sorte que l’application cliente consomme quand elle le veut et au rythme ou elle le peut les messages qui lui sont destinés.</p>
+</div>
+<div class="paragraph">
+<p>La répartition de charge se fait naturellement avec l’augmentation du nombre d’instances de l’application cliente (pour Kafka, au sein d’un même <strong>client-group</strong>, le nombre de partitions doit être supérieure à celui des applications clientes).</p>
+</div>
+<div class="paragraph">
+<p>Il faut cependant être vigilant à la stratégie de livraison de message :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>at most once</strong> : un message est délivré au plus une fois. Par conséquent, il peut y avoir des pertes de message (cas marginal).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Cas d’usage : notifications, données peu importantes</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>at least once</strong> : un message est délivré au moins une fois. Par conséquent, il peut être délivré plusieurs fois (cas marginal) et l’application cliente doit être capable de dé-dupliquer ces messages</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Cas d’usage : tout le reste, du moment qu’on ne peut pas se permettre de perdre un message (commande client, transaction bancaire, changement d’une fiche patient, etc.)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exemple_dévolution_darchitecture">4.4. Exemple d’évolution d’architecture</h3>
+<div class="paragraph">
+<p>Considérant une application <em>classique</em> comme celle-ci :</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/korekto_context.png" alt="korekto context">
+</div>
+<div class="title">Figure 3. Diagramme de Contexte</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/korekto_container_v0.png" alt="korekto container v0">
+</div>
+<div class="title">Figure 4. Diagramme de Container</div>
+</div>
+<div class="sect3">
+<h4 id="_introduction_dun_répartiteur_de_charge">4.4.1. Introduction d’un répartiteur de charge</h4>
+<div class="paragraph">
+<p>Le dimensionnement horizontal, c’est la capacité du système à répartir la charge sur plusieurs instances (ou nœuds).<br>
+Mais du point de vue des utilisateurs, il n’y a qu’un seul service (<a href="https://korekto.io" class="bare">https://korekto.io</a> par exemple).<br>
+Pour faire cela il est nécessaire d’introduire un répartiteur de charge.</p>
+</div>
+<div class="paragraph">
+<p>Attention ici, la partie qui exécute une tâche toutes les 4 heures ne doit être active que sur une seule instance, sous peine de faire le même travail plusieurs fois, ce qui peut provoquer :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Charge CPU inutile</p>
+</li>
+<li>
+<p>États incohérents en base</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/korekto_container_v1.png" alt="korekto container v1">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_découpage_de_lapplicatif">4.4.2. Découpage de l’applicatif</h4>
+<div class="paragraph">
+<p>Certaines fonctions de l’application, sont exécutées plus au moins souvent, et utilisent plus ou moins de CPU.</p>
+</div>
+<div class="paragraph">
+<p>Il peut être intéressant de découper une application monolithique en plusieurs petites applications pour pouvoir dimensionner finement les fonctions les plus sollicitées.</p>
+</div>
+<div class="paragraph">
+<p>Ce découpage doit respecter une unique règle pour être profitable :</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Les applications découpées à partir d’un monolithe doivent être indépendantes d’un point de vue métier et technique.</p>
+</div>
+<div class="paragraph">
+<p>C’est-à-dire que si une de ces applications est amenée à évoluer, elle doit pouvoir être mise à jour sans impact dans les autres applications</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/korekto_container_v2.png" alt="korekto container v2">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_suppression_des_spofs">4.4.3. Suppression des SPOFs</h4>
+<div class="paragraph">
+<p>Les points de défaillance unique (<strong>S</strong>ingle <strong>P</strong>oint <strong>O</strong>f <strong>F</strong>ailure), sont des conteneurs du système qui ne peuvent pas être répliqués.<br>
+Cela pose 2 problèmes :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si le conteneur ne fonctionne plus, il y a une coupure de service</p>
+</li>
+<li>
+<p>Si le trafic augmente (ici le nombre d’exercices à corriger), la seule solution est par définition le dimensionnement vertical.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>La cause des SPOFs est souvent un état en mémoire qui ne peut être facilement répliqué.<br>
+C’est le cas de notre conteneur <strong>[batch]</strong>.</p>
+</div>
+<div class="paragraph">
+<p>En effet, si plusieurs instances devaient s’exécuter, comment pourraient-elles simplement se synchroniser pour se répartir le travail et reprendre celui des autres instances dans le cas de pannes ?</p>
+</div>
+<div class="paragraph">
+<p>Dans notre cas, il est possible de faire plus simple en utilisant les hooks de GitHub pour être notifié en cas de changement, plutôt que de lancer une tache quoi qu’il arrive.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/korekto_container_v3.png" alt="korekto container v3">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ne_pas_communiquer_par_le_stockage">4.4.4. Ne pas communiquer par le stockage !</h4>
+<div class="paragraph">
+<p>Quand nous avons découpé notre applicatif, nous avons commis une grave erreur.<br>
+En effet, le conteneur <strong>[web]</strong> et le conteneur <strong>[grader]</strong> communiquent par la base de données.</p>
+</div>
+<div class="paragraph">
+<p>C’est un <strong>anti-pattern</strong> d’architecture, car :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Comment changer la base par une autre sans impacter les 2 conteneurs ?</p>
+</li>
+<li>
+<p>Comment changer la façon de stocker la donnée sans impacter les 2 conteneurs ?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Bref, ces 2 conteneurs sont couplés.</p>
+</div>
+<div class="paragraph">
+<p>Le but ici va être d’introduire un nouveau <em>container</em> qui va abstraire le stockage.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/korekto_container_v4.png" alt="korekto container v4">
+</div>
+</div>
+<div class="paragraph">
+<p>Ainsi, dans le cas où</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Une partie de la donnée doit être stockée de manière différente (dans une base de donnée relationnelle par ex)</p>
+<div class="ulist unstyled">
+<ul class="unstyled">
+<li>
+<p>&#8594; la seule modification à apporter est dans le code du conteneur <strong>[storage API]</strong>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le format de spécification d’exercice évolue pour inclure plus de données -&#8594; [storage API] on propose une nouvelle API (GET / POST / PUT / DELETE) <a href="#">/api/admin/specification/exercise/${name}/v2</a></p>
+<div class="ulist unstyled">
+<ul class="unstyled">
+<li>
+<p>&#8594; <strong>[web]</strong> on utilise cette nouvelle API pour que les professeurs puissent écrire des spécifications plus détaillées</p>
+</li>
+<li>
+<p>&#8594; <strong>[grader]</strong> on utilise cette nouvelle API pour corriger les exercices plus finement</p>
+</li>
+<li>
+<p>&#8594; <strong>[storage API]</strong> on supprime l’ancienne API (<a href="#">/api/admin/specification/exercise/${name}/v1</a>) maintenant que plus aucun conteneur ne l’utilise</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Ce genre de changement peut être apporté sans coupure de service.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_documenter_larchitecture">5. Documenter l’architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Historiquement, la documentation d’un projet informatique était très verbeuse (Cahier des charges techniques, <strong>D</strong>ossier d’<strong>A</strong>rchitecture <strong>T</strong>ransverse, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Or, un projet informatique évolue vite, plus vite que ces documents.<br>
+Cette "documentation" devient alors obsolète et amène des incompréhensions ou des bugs car certaines informations deviennent fausses avec le temps.</p>
+</div>
+<div class="paragraph">
+<p>Documenter un projet est cependant nécessaire pour transmettre la connaissance entre les différents individus qui vont s’y succéder.</p>
+</div>
+<div class="paragraph">
+<p>L’objectif est donc d’écrire le minimum vital de documentation en éliminant le superflu et de raccrocher le plus possible cette documentation au code.</p>
+</div>
+<div class="paragraph">
+<p>On parle alors de documentation vivante, si celle-ci évolue comme le code, et notamment si des parties sont générées à partir du code.</p>
+</div>
+<div class="sect2">
+<h3 id="_readme">5.1. README</h3>
+<div class="paragraph">
+<p>Le fichier README, écrit en Markdown ou en AsciiDoc (comme ce cours) se trouve à la racine du projet / dépôt.<br>
+Il s’agit de la porte d’entrée pour un projet inconnu.</p>
+</div>
+<div class="paragraph">
+<p>Il renseigne sur les questions suivantes :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>À quoi sert le projet ?</p>
+</li>
+<li>
+<p>Comment utiliser le projet (outil de construction, etc.)</p>
+</li>
+<li>
+<p>Comment contacter et travailler avec les autres personnes sur ce projet</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Très populaire dans le monde de l’open-source cette pratique et également importante en entreprise dès lors que de nombreux projets cohabitent dans un même système d’information et que différentes équipes doivent travailler ensembles.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/readme_sample.png" alt="readme sample">
+</div>
+<div class="title">Figure 5. Fichier README du projet Spring</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_c4">5.2. C4</h3>
+<div class="paragraph">
+<p><strong>C4</strong> est une approche pour concevoir un système informatique sans en compliquer inutilement l’architecture.</p>
+</div>
+<div class="paragraph">
+<p>Pour ce faire, il est nécessaire d’établir un ensemble de termes et d’abstractions avec lesquels tous les intervenants du projet pourront se <strong><em>comprendre</em></strong>.</p>
+</div>
+<div class="paragraph">
+<p>C’est une étape cruciale, qui permet d’éviter par la suite d’avoir des incompréhensions entre les différents corps de métier (fonctionnels, développeurs, intégrateurs, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Ce sont ces éléments qui permettront de construire les diagrammes qui seront à la base du projet.</p>
+</div>
+<div class="sect3">
+<h4 id="_contexte">5.2.1. Contexte</h4>
+<div class="paragraph">
+<p>Avec cette base, les intervenants peuvent construire le <strong>diagramme de <em>contexte</em></strong>.</p>
+</div>
+<div class="paragraph">
+<p>Ce diagramme permet de comprendre les principales fonctionnalités du système <span class="underline">sans</span> afficher <strong>comment</strong> le système est organisé.</p>
+</div>
+<div class="paragraph">
+<p>Le système est représenté par une unique forme (boite noire) qui sera en interaction avec des personnes ou d’autres systèmes.</p>
+</div>
+<div class="paragraph">
+<p>Les détails (technologies, protocoles, etc.) n’ont pas d’importance dans ce diagramme, qui doit pouvoir être compris par des intervenants non-techniques.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/c4_context_diagram.png" alt="c4 context diagram">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_container">5.2.2. Container</h4>
+<div class="paragraph">
+<p>Une fois les fonctionnalités du systèmes acquises, on peut <em>zoome</em>} d’un cran avec le <strong>diagramme de <em>conteneurs</em></strong>.</p>
+</div>
+<div class="paragraph">
+<p>On entend par <em>conteneur</em> tout système qui peut héberger du code ou des données (application, base de données, broker, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Ce diagramme va refléter l’architecture du système et permettre de visualiser comment les <span class="underline">responsabilités</span> sont réparties entre les différentes briques logicielles.</p>
+</div>
+<div class="paragraph">
+<p>Ici peuvent être représentés</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Sécurité</strong> : zones réseau, flux chiffrés, traçabilité, etc.</p>
+</li>
+<li>
+<p><strong>Scalabilité</strong> : load-balancers, (SPOF), etc.</p>
+</li>
+<li>
+<p><strong>Fiabilité</strong> : sauvegarde, réplication, etc</p>
+</li>
+<li>
+<p><strong>Supervision</strong> : sondes, bases, IHM, etc.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/c4_container_diagram.png" alt="c4 container diagram">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_composant">5.2.3. Composant</h4>
+<div class="paragraph">
+<p>On peut à nouveau <em>zoomer</em> sur chacun des conteneurs grâce au <strong>diagramme de <em>composants</em></strong>.</p>
+</div>
+<div class="paragraph">
+<p>Ce diagramme détaille ce dont est composé un conteneur, avec un découpage possible par</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Fonctionnalité transverse</p>
+</li>
+<li>
+<p>Service métier</p>
+</li>
+<li>
+<p>Workflow</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Un composant a donc une identité logique, une <span class="underline">responsabilité</span> et interagit avec d’autres composants.</p>
+</div>
+<div class="paragraph">
+<p>Sont habituellement consignés les détails d’implémentation et choix technologiques car ce schéma peut être la documentation la plus détaillée d’un projet.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/c4_component_diagram.png" alt="c4 component diagram">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_classe">5.2.4. Classe</h4>
+<div class="paragraph">
+<p>Si nécessaire, il est possible de descendre au classique <strong>diagramme UML de <em>classes</em></strong>.</p>
+</div>
+<div class="paragraph">
+<p>Ce diagramme est rarement utile si les besoins sont clairs, et les responsabilités bien réparties.</p>
+</div>
+<div class="paragraph">
+<p>Cependant, pour modéliser un comportement complexe, ce schéma peut mettre en lumière une interaction complexe entre plusieurs objets.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/c4_class_diagram.jpg" alt="c4 class diagram">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adr_architectural_decision_records">5.3. ADR (Architectural Decision Records)</h3>
+<div class="paragraph">
+<p>L’<strong>ADR</strong> est un journal dont chaque entrée concerne un choix structurant dans l’architecture d’une application.</p>
+</div>
+<div class="paragraph">
+<p>Il est écrit par les développeurs et stocké le plus souvent à côté du code, dans le même dépôt.</p>
+</div>
+<div class="paragraph">
+<p>La lecture de ce journal permet de comprendre pourquoi et comment une application est construite.</p>
+</div>
+<div class="paragraph">
+<p>En effet dans une entrée du journal, on va retrouver</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>La date</p>
+</li>
+<li>
+<p>Les individus impliqués</p>
+</li>
+<li>
+<p>Le contexte : ce qui a amené à faire ce choix (problème de sécurité, d’organisation, de performance, etc.)</p>
+</li>
+<li>
+<p>Les différentes solutions envisagées</p>
+</li>
+<li>
+<p>La décision</p>
+</li>
+<li>
+<p>Les conséquences prévues</p>
+</li>
+<li>
+<p>Éventuellement un statut, qui témoigne que la question a été posée, réfléchie, mais que finalement aucune solution n’a été retenue</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_documentation_des_apis">5.4. Documentation des APIs</h3>
+<div class="paragraph">
+<p>Les APIs exposées à l’extérieur d’un système peuvent être documentées de différentes manières :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Contract First</strong> : on écrit le contrat dans un format donné (RAML, WSDL, etc.), et ensuite on écrit ou on <em>génère</em> le code correspondant.<br>
+À noter que si le code est généré, il y a toujours une seconde étape de "raccordement" au code métier.</p>
+</li>
+<li>
+<p><strong>Code First</strong> : on écrit le code technique permettant d’exposer l’API.<br>
+Ce code peut être enrichi de métadonnées sur l’utilisation de l’API (description, signification des différents codes d’erreur, etc.).<br>
+La documentation est ensuite générée sur la base de ce code, notamment avec l’initiative <strong>OpenAPI</strong> (anciennement Swagger) et les nombreux outils de son écosystème.<br>
+Dans le cas où ce mécanisme est inclus dans la construction du projet, la documentation évolue à chaque changement de code.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>L’approche <strong>code first</strong> est la plus pérenne, car elle évite qu’un décalage entre la documentation et le code s’introduise au fil du temps.</p>
+</div>
+<div class="paragraph">
+<p>Il faut cependant être vigilant sur les modifications d’une API et à ce que cela va impliquer pour les clients de cette API.</p>
+</div>
+<div class="paragraph">
+<p>Certains changements sont sans conséquences</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ajouter un champ dans une réponse</p>
+</li>
+<li>
+<p>Supprimer un champ optionnel dans une requête</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#8594; <em>Qui peut le plus, peut le moins</em>.</p>
+</div>
+<div class="paragraph">
+<p>D’autres changements, comme</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Supprimer un champ dans une réponse</p>
+</li>
+<li>
+<p>Ajouter un champ obligatoire dans une requête</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Vont entrainer des malfonctions dans la communication, et nécessitent d’être abordés différemment.</p>
+</div>
+<div class="paragraph">
+<p>Dans le cas où ce second genre de modifications est nécessaire, il est possible de proposer une nouvelle version de l’API tout en continuant de servir la première version.</p>
+</div>
+<div class="paragraph">
+<p>Ainsi les clients ont le temps de faire le changement de code nécessaire de leur côté pour utiliser la nouvelle version.<br>
+Quand tous les clients ont opéré ces changements, le code de la première version peut êre supprimé.</p>
+</div>
+<div class="paragraph">
+<p>Ce faisant, on introduit un <strong><em>découplage</em></strong> entre les systèmes en permettant que chacun fasse les changements à son rythme.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bdd_et_atdd">5.5. BDD et ATDD</h3>
+<div class="paragraph">
+<p>Le <strong>B</strong>ehavior <strong>D</strong>riven <strong>D</strong>evelopment et l’<strong>A</strong>cceptance <strong>T</strong>est <strong>D</strong>riven <strong>D</strong>evelopment sont deux techniques similaires qui visent à décrire le comportement des fonctionnalités d’un système dans un formalisme compréhensible par tous les intervenants du projet.<br>
+Il peut s’agir de langage naturel (Français, Anglais, etc.) ou de graphes d’état, du moment que le vocabulaire est univoque.</p>
+</div>
+<div class="paragraph">
+<p>Ce vocabulaire dont les mots et phrases vont être utilisés dans différents tests et scénarios est ensuite associé à du code.</p>
+</div>
+<div class="paragraph">
+<p>Ces tests et scénarios <em>compris par tous</em> deviennent alors <span class="underline"><strong><em>executables</em></strong></span>.</p>
+</div>
+<div class="paragraph">
+<p>À l’instar du TDD, il s’agit moins d’écrire des tests que d’une méthodologie de travail.</p>
+</div>
+<div class="paragraph">
+<p>Par ailleurs cette façon de construire les tests et scénarios favorise la composition et donne aux intervenants plus d’autonomie ainsi qu’une meilleure compréhension.</p>
+</div>
+<div class="paragraph">
+<p>On trouve dans le BDD des contraintes sur le formalisme des scénarios, contraintes similaires à celle d’un <em>test unitaire</em> : les phrases doivent commencer par</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Given</strong> : les conditions initiales, il peut y en avoir zéro ou plus &#8594; <strong>[0..*]</strong></p>
+</li>
+<li>
+<p><strong>When</strong> : l&#8217;élément déclencheur, il doit y en avoir un et uniquement un &#8594; <strong>[1]</strong></p>
+</li>
+<li>
+<p><strong>Then</strong> : les vérifications, il doit y en avoir au moins une &#8594; <strong>[1..*]</strong></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Listing 7. Description d&#8217;une fonctionnalité au format <strong>Gherkin</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-gherkin" data-lang="gherkin">Feature: Is it Friday yet?
+Everybody wants to know when it's Friday
+
+  Scenario: Sunday isn't Friday
+    Given today is Sunday
+    When I ask whether it's Friday yet
+    Then I should be told "Nope"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Listing 8. Association des phrases à du code</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Stepdefs {
+    private String today;
+    private String actualAnswer;
+
+    @Given("today is Sunday") // <b class="conum">(1)</b>
+    public void today_is_Sunday() {
+        today = "Sunday";
+    }
+
+    @When("I ask whether it's Friday yet")
+    public void i_ask_whether_it_s_Friday_yet() {
+        actualAnswer = IsItFriday.isItFriday(today);
+    }
+
+    @Then("I should be told {string}")
+    public void i_should_be_told(String expectedAnswer) {
+        assertEquals(expectedAnswer, actualAnswer);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Annotation fournie par le framework de test <strong>Cucumber</strong></p>
+</li>
+</ol>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_techniques_bonnes_pratiques">6. Techniques &amp; bonnes pratiques</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_kiss_yagni_dry">6.1. KISS, YAGNI &amp; DRY</h3>
+<div class="paragraph">
+<p>Quelques principes populaires qui circulent dans les communautés de développeurs :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>K</strong>eep <strong>I</strong>t <strong>S</strong>tupid <strong>S</strong>imple : Le plus simple, le mieux.<br>
+Faire simple n’est cependant pas toujours facile.</p>
+</li>
+<li>
+<p><strong>Y</strong>ou <strong>A</strong>in’t <strong>G</strong>onna <strong>N</strong>eed <strong>I</strong>t : N’ajouter que du code utile dans le présent.<br>
+Les prédictions sur le futur peuvent se révéler fausses et la conception qui a été faites "en prévision de" peut faire obstacle une fois le futur devenu présent.</p>
+</li>
+<li>
+<p><strong>D</strong>on’t <strong>R</strong>epeat <strong>Y</strong>ourself : La duplication est mal vue parmi les développeurs, et amène plusieurs problèmes :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>C’est plus de travail, il faut écrire, tester et maintenir plusieurs fois le même code</p>
+</li>
+<li>
+<p>En cas de bug, il faut corriger à de multiples endroits, certains pouvant être oubliés</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>C’est cette même simplicité que l’on retrouve dans deux des douze principes du <strong>Manifeste Agile</strong> :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Our highest priority is to satisfy the customer through early and continuous delivery of <span class="underline"><strong>valuable</strong></span> software</p>
+</li>
+<li>
+<p>Simplicity [the art of maximizing the amount of work not done] is essential.</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gestion_des_logs">7. Gestion des logs</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">Listing 9. Exemple de log peu utile</div>
+<div class="content">
+<pre class="highlight"><code>2017-02-04 22:33:12 [thread-1] com.github.some.project.DatabaseService l.74 #################
+2017-02-04 22:33:12 [thread-2] com.github.some.project.DatabaseService l.75 START
+2017-02-04 22:33:12 [thread-1] com.github.some.project.DatabaseService l.93 STOP in 17ms
+2017-02-04 22:33:12 [thread-2] com.github.some.project.DatabaseService l.94 #################
+2017-02-04 22:33:12 [thread-1] com.github.some.project.DatabaseService l.124 java.sql.SQLIntegrityConstraintViolationException
+at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+at org.h2.message.DbException.get(DbException.java:179)
+at org.h2.message.DbException.get(DbException.java:155)
+at org.h2.command.CommandContainer.update(CommandContainer.java:98)
+at org.h2.command.Command.executeUpdate(Command.java:258)
+at org.h2.jdbc.JdbcPreparedStatement.execute(JdbcPreparedStatement.java:201)
+... 50 more</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Listing 10. C’est déjà mieux</div>
+<div class="content">
+<pre class="highlight"><code>2017-02-04 22:33:12.332 INFO  5jhgd45ui74h c.g.s.p.UserService.create [Joshua] [Bloch] Save successful
+2017-02-04 22:33:12.758 INFO  6jyg45hgduyg c.g.s.p.UserService.create [Doug] [Lea] Save successful
+2017-02-04 22:33:12.964 ERROR hg457gehe4rt c.g.s.p.UserService.create [James] [Gosling] Save KO: already exists</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Les logs ou fichiers d’évènements sont ces <em>fichiers</em> qui contiennent les informations nécessaires au diagnostique en cas de problème.<br>
+Elles peuvent également être utilisées comme source de données pour créer des métriques de supervision.<br>
+Les logs sont souvent la seule trace de la chronologie des évènements et sont d’autant plus importantes dans les applications à fort traffic, où résoudre le problème d’un utilisateur peut s’apparenter à chercher une aiguille dans une botte de foin.</p>
+</div>
+<div class="sect2">
+<h3 id="_bibliothèques_de_log">7.1. Bibliothèques de log</h3>
+<div class="paragraph">
+<p>Côté applicatif, il existe de nombreuses bibliothèques pour écrire dans des fichiers de logs.</p>
+</div>
+<div class="paragraph">
+<p>Rien que dans l’univers Java, on peut trouver</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JUL (<strong>J</strong>ava <strong>U</strong>til <strong>L</strong>ogging) minimaliste, fourni par le JDK</p>
+</li>
+<li>
+<p>Apache JULI (<strong>J</strong>ava <strong>U</strong>til <strong>L</strong>ogging <strong>I</strong>nterface)</p>
+</li>
+<li>
+<p>Apache Commons Logging</p>
+</li>
+<li>
+<p>Apache Log4J</p>
+</li>
+<li>
+<p>JBoss Logging</p>
+</li>
+<li>
+<p>Logback</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>On retrouve dans ces différents outils des concepts communs :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Découplage entre le composant qui collecte les logs (<code>Logger</code>) et celui qui écrit à l’extérieur du système (<code>Appender</code>)</p>
+</li>
+<li>
+<p>Configuration extérieure au code (fichier, propriétés système)</p>
+</li>
+<li>
+<p>Niveaux de sévérités</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>DEBUG</strong> : utilise pour le développement, invisible une fois l’application déployée en dehors d’un poste de développement</p>
+</li>
+<li>
+<p><strong>INFO</strong> : information sur un évènement dans le système (changement d’état ou réaction à une sollicitation exogène)</p>
+</li>
+<li>
+<p><strong>WARN</strong> : une erreur est survenue, le système ne s’est pas comporté comme prévu, mais aucune intervention humaine n’est requise immédiatement</p>
+</li>
+<li>
+<p><strong>ERROR</strong> : une erreur est survenue, une intervention humaine est requise pour corriger le problème</p>
+</li>
+<li>
+<p>(<strong>FATAL</strong> : une erreur <span class="underline">irrémédiable</span> est survenue, suite à quoi le système s’est arrêté)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Une erreur métier n’est pas forcément une erreur technique.<br>
+Par exemple : un utilisateur qui entre un mauvais mot de passe est un cas métier normal, géré par le code, et l’évènement correspondant (s’il est tracé) est de sévérité <strong>INFO</strong>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_architecture_de_slf4j">7.1.1. Architecture de SLF4J</h4>
+<div class="paragraph">
+<p>Le problème avec cette multiplicité de choix d’outil est que l’écosystème s’est construit de manière hétérogène.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tomcat utilise <strong>JUL</strong> à travers l’abstraction <strong>JULI</strong>.</p>
+</li>
+<li>
+<p>Spring utilise <strong>Apache Commons Logging</strong>.</p>
+</li>
+<li>
+<p>Le client <strong>HBase</strong> officiel utilise <strong>Log4j</strong>.</p>
+</li>
+<li>
+<p>Etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Une application qui utilise différents frameworks et bibliothèques devrait alors configurer chacune de ces technologies de <em>logging</em> et ce de manière cohérente (même format de ligne, même fichier, même sévérité minimum, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Ce serait pénible, et le risque de problèmes serait élevé (concurrence d’accès sur un même fichier, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Une technologie existe cependant, pour unifier tous ces outils : <strong>SLF4J</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Cet outil est composé</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>D’une <strong><em>API abstraite</em></strong> représentant de manière unifiée un grand nombre des fonctionnalités des bibliothèques de log existantes</p>
+</li>
+<li>
+<p>D’<strong><em>adaptateurs</em></strong> entre cette API et les bibliothèques de logs existantes qui ne l’implémentent pas</p>
+</li>
+<li>
+<p>De <strong><em>bridges</em></strong>, bibliothèques ayant la même compatibilité binaire (même noms qualifiés des classes, même signatures des méthodes) que les bibliothèques de logs existantes, mais redirigeant les messages vers l’<strong><em>API abstraite</em></strong></p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/slf4j_bridges.png" alt="slf4j bridges">
+</div>
+</div>
+<div class="paragraph">
+<p>Dans une application mettant cette technologie à profit, toutes les logs sont redirigées vers cette <strong><em>API abstraite</em></strong> et envoyées vers une seule et unique bibliothèque de log.</p>
+</div>
+<div class="paragraph">
+<p>La configuration est alors faite une fois, et il n’y a plus de risque de concurrence d’accès.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mdc_mapped_diagnostic_context">7.1.2. MDC (Mapped Diagnostic Context)</h4>
+<div class="paragraph">
+<p>Le <strong>MDC</strong> est un outil fourni par la plupart des bibliothèques de log qui permet de transporter de l’information dans un même thread.</p>
+</div>
+<div class="paragraph">
+<p>L’idée est d’enrichir les informations transverses utiles pour une ligne de log au fur et à mesure de leur disponibilité, sans avoir à les passer en paramètres de toutes les méthodes précédant l’écriture du message.</p>
+</div>
+<div class="paragraph">
+<p>Considérant ce code :</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 11. Fichier MyController.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class MyController {
+
+    private final MyService service;
+
+    public User newUser(User user, @Header("correlationId") String correlationId) {
+        return service.newUser(user, correlationId);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Listing 12. Fichier MyService.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class MyService {
+
+    private final Logger logger = LoggerFactory.getLogger(MyService.class);
+    private final MyRepository repository;
+
+    public User newUser(User user, String correlationId) {
+        if(isValid(user, correlationId)) {
+            return repository.save(user, correlationId);
+        } else {
+            throw new InvalidUserException();
+        }
+    }
+
+    private boolean isValid(User user, String correlationId) {
+        if(user.age &gt; 110) {
+            logger.info("[" + correlationId + "] Invalid User: too old");
+            return false;
+        } else if(user.age &lt; 1) {
+            logger.info("[" + correlationId + "] Invalid User: too young");
+            return false;
+        }
+        return true;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>La variable <code>correlationId</code> est passé systématiquement car il est nécessaire de la logger à chaque fois pour réconcilier plusieurs lignes de logs qui concernent le même appel d’un utilisateur.</p>
+</div>
+<div class="paragraph">
+<p>C’est une bonne candidate pour le <strong>MDC</strong> :</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 13. Fichier MyController.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class MyController {
+
+    private final MyService service;
+
+    public User newUser(User user, @Header("correlationId") String correlationId) {
+        MDC.put("correlationId", correlationId);
+        return service.newUser(user);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Listing 14. Fichier MyService.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class MyService {
+
+    private final Logger logger = LoggerFactory.getLogger(MyService.class);
+    private final MyRepository repository;
+
+    public User newUser(User user) {
+        if(isValid(user)) {
+            return repository.save(user);
+        } else {
+            throw new InvalidUserException();
+        }
+    }
+
+    private boolean isValid(User user) {
+        if(user.age &gt; 110) {
+            logger.info("Invalid User: too old");
+            return false;
+        } else if(user.age &lt; 1) {
+            logger.info("Invalid User: too young");
+            return false;
+        }
+        return true;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Il n’y a plus qu’à configurer le bon format de sortie des lignes de log pour que le <code>correlationId</code> soit présent.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 15. Fichier logback.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;configuration&gt;
+
+  &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;encoder&gt;
+      &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%X{correlationId}] %msg%n&lt;/pattern&gt; &lt;!--<b class="conum">(1)</b>--&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
+
+  &lt;root level="DEBUG"&gt;
+    &lt;appender-ref ref="STDOUT" /&gt;
+  &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Ici une ligne de log sera structurée comme suit : &lt;heure&gt; &lt;nom du thread&gt; &lt;sévérité&gt; &lt;nom de la classe&gt; - &lt;correlationId&gt; &lt;message&gt;</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logs_gc">7.2. Logs GC</h3>
+<div class="paragraph">
+<p>Les logs applicatives sont une chose, mais quand un problème arrive en production, son origine ou ses symptômes peuvent être techniques.</p>
+</div>
+<div class="paragraph">
+<p>Il est important de ne pas oublier d’activer les logs du <strong>G</strong>arbarge <strong>C</strong>ollector.<br>
+Cela se fait avec un flag sur la ligne de commande du démarrage de la JVM :</p>
+</div>
+<div class="paragraph">
+<p><code>-Xlog:gc=debug:file=gc.log:pid,time,uptimemillis:filecount=5,filesize=1M</code></p>
+</div>
+<div class="paragraph">
+<p>Ici la JVM va écrire les évènements à partir de la sévérité <strong>debug</strong> dans un fichier <strong>gc.log</strong> (en gérant la rotation sur 5 fichiers max de 1M chacun) avec les informations PID (processus ID), heure et durée d’exécution de l’application.</p>
+</div>
+<div class="paragraph">
+<p>Plus d’options ici : <a href="https://openjdk.java.net/jeps/158" class="bare">https://openjdk.java.net/jeps/158</a></p>
+</div>
+<div class="paragraph">
+<p><span class="underline">Alternativement</span> des outils de collecte de métriques tels que <strong>Micrometer</strong> peuvent exporter ces informations vers des systèmes ingérant des <em>séries temporelles</em> (Time Series) tels que <strong>Graphite</strong>, <strong>Warp10</strong> ou <strong>Prometheus</strong> (pour du on-premise).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_heap_dump">7.3. Heap Dump</h3>
+<div class="paragraph">
+<p>Quand la JVM s’arrête de manière non prévue, cela peut être à cause d’un problème de mémoire (<strong>O</strong>ut <strong>O</strong>f <strong>M</strong>emory error) et dans ce cas l’investigation peut se faire sur la base d’un <strong>Heap Dump</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Un <strong>Heap Dump</strong> est une projection sur fichier de l’état de la mémoire de la JVM.</p>
+</div>
+<div class="paragraph">
+<p>Voici donc le flag à ne pas oublier sur la ligne de commande du démarrage de la JVM :</p>
+</div>
+<div class="paragraph">
+<p><code>-XX:+HeapDumpOnOutOfMemoryError</code></p>
+</div>
+<div class="paragraph">
+<p>Par la suite un tel fichier peut être analysé avec des outils comme <strong>Eclipse MAT</strong> (gratuit) ou <strong>JProfiler</strong> (payant).<br>
+=== Centralisation des logs</p>
+</div>
+<div class="paragraph">
+<p>Afin de pouvoir exploiter au mieux les logs, il est important de les centraliser.<br>
+C’est-à-dire les envoyer dans un même endroit, que ce soit dans un :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Système de fichier, sur lequel on pourra utiliser la commande <code>grep</code> par exemple</p>
+</li>
+<li>
+<p><em>ElasticSearch</em>, <em>Loki</em> ou équivalent, sur lequel on pourra faire des requêtes</p>
+</li>
+<li>
+<p>SAAS dont c’est le coeur de métier (<em>Datadog</em>, <em>Logz.io</em>, etc.)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Les logs doivent être claires et apporter le maximum d’information possible.<br>
+Pour cela on évite les logs visuelles ou de <em>debug</em>.</p>
+</div>
+<div class="sect3">
+<h4 id="_la_stack_elastic">7.3.1. La stack Elastic</h4>
+<div class="paragraph">
+<p>Il existe plusieurs solutions de centralisation <em>on premise</em>, la plus connue étant la suite proposée par <em>Elastic</em> : <strong>ELK</strong> (<strong>E</strong>lasticSearch, <strong>L</strong>ogstash, <strong>K</strong>ibana).<br>
+Aujourd’hui un peu datée, des composants peuvent être remplacés, la chaîne peut être plus complexe pour mieux gérer le dimensionnement, mais la structure reste néanmoins identique.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/elk_stack.png" alt="elk stack">
+</div>
+</div>
+<div class="paragraph">
+<p>La brique <strong>Logstash</strong> permet de découper les lignes de logs en documents structurés (JSON) pour ensuite les envoyer à <strong>ElasticSearch</strong>.<br>
+<strong>ElasticSearch</strong> indexe les documents reçus et propose une API de recherche utilisée par <strong>Kibana</strong>.<br>
+<strong>Kibana</strong> fourni une interface Web qui satisfait aussi bien à la recherche exploratoire qu’à la création de tableaux de bord pour suivre l’état du système.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supervision">8. Supervision</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La collecte de logs et de métriques forme la base de la <em>supervision</em> d’un système.</p>
+</div>
+<div class="paragraph">
+<p>Sur cette base, il est nécessaire d’ajouter des composants pour transformer ces données brutes en :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Alertes, dans le cas où un comportement anormal est détecté</p>
+</li>
+<li>
+<p>Tableaux de bord, pour investiguer un comportement anormal, trouver des correlations et converger vers l’origine du problème.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>La supervision, c’est l’outillage qui permet de suivre l’état d’un système, de comprendre son fonctionnement, et même de prévoir son utilisation.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Conseil</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Il faut néanmoins faire preuve de retenue et ne garder que les informations qui ont de la valeur, au risque de se perdre dans trop d’information et de devoir stocker d’énormes quantités d’informations inutiles.</p>
+</div>
+<div class="paragraph">
+<p>Le résultat doit être construit à l’aide de ces trois questions :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Quels sont les comportements du système que l’on souhaite identifier comme problématiques (service indisponible, utilisation anormale, etc.) ?</p>
+</li>
+<li>
+<p>Quels comportements du système souhaite-t-on comprendre (coup de bélier, interruption de services externes, etc.) ?</p>
+</li>
+<li>
+<p>Où placer les sondes qui remonterons les informations nécessaires ?</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Que ce soit des outils d’indexation de document, de stockage de séries temporelles ou des bases de données, tous sont des sources d’information pour la constitution de tableaux de bord et d’alerte.</p>
+</div>
+<div class="paragraph">
+<p>L’outil open-source le plus complet aujourd’hui pour aggréger ces sources est Grafana</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/grafana.png" alt="grafana">
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Contrairement à ce que l’industrie en France tente de nous faire croire, être Architecte Logiciel n’est pas un métier à part.</p>
+</div>
+<div class="paragraph">
+<p>Ces questions d’architectures doivent être traitées par l’équipe de développement, chacun à la mesure de son expérience.</p>
+</div>
+<div class="paragraph">
+<p>Ce sont bien des <span class="underline">développeurs</span> qui doivent réfléchir aux conséquences de leurs réalisations et qui de toute façon les assumerons une fois le produit en production.</p>
+</div>
+<div class="paragraph">
+<p>L’architecture logicielle, tout comme la veille technologique, fait partie intégrante du portefeuille d’outils d’un développeur.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pour_aller_plus_loin">Pour aller plus loin</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Out of the tar pit, traité sur la complexité<br>
+<a href="https://github.com/papers-we-love/papers-we-love/blob/master/design/out-of-the-tar-pit.pdf" class="bare">https://github.com/papers-we-love/papers-we-love/blob/master/design/out-of-the-tar-pit.pdf</a></p>
+</li>
+<li>
+<p>Agile Manifesto<br>
+<a href="https://agilemanifesto.org/" class="bare">https://agilemanifesto.org/</a></p>
+</li>
+<li>
+<p>Blogs de</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Martin Fowler<br>
+<a href="https://martinfowler.com/" class="bare">https://martinfowler.com/</a></p>
+</li>
+<li>
+<p>Simon Brown<br>
+<a href="https://www.codingthearchitecture.com/" class="bare">https://www.codingthearchitecture.com/</a></p>
+</li>
+<li>
+<p>Jessie Frazelle<br>
+<a href="https://blog.jessfraz.com/" class="bare">https://blog.jessfraz.com/</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Vidéos YouTube de conférences</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Devoxx</p>
+</li>
+<li>
+<p>goto;</p>
+</li>
+<li>
+<p>DevFest</p>
+</li>
+<li>
+<p>JUGs (<strong>J</strong>ava <strong>U</strong>ser <strong>G</strong>roup)</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Sites d’actualités et de contenu</p>
+<div class="ulist">
+<ul>
+<li>
+<p>InfoQ <a href="https://www.infoq.com/fr/" class="bare">https://www.infoq.com/fr/</a></p>
+</li>
+<li>
+<p>Developpez <a href="https://www.developpez.com/" class="bare">https://www.developpez.com/</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</body>
+</html>
