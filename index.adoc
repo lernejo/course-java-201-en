@@ -1,9 +1,9 @@
-= Java 201 - Architecture logicielle
+= Java 201 - Software Architecture
 Loïc Ledoyen <ledoyen.loic@gmail.com>
 :reproducible:
 :toc-title: Java 201
 :listing-caption: Listing
-:tip-caption: Conseil
+:tip-caption: Advice
 :hardbreaks-option:
 :toc: left
 :title-page:
@@ -57,9 +57,9 @@ include::chapters/chapter-6.adoc[]
 
 <<<
 
-// Gestion des logs
+// Logs management
 include::chapters/chapter-7.adoc[]
-// Centralisation des logs
+// Log centralization
 include::chapters/chapter-8.adoc[]
 
 <<<

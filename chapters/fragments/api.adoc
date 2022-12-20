@@ -1,33 +1,34 @@
-Les APIs exposées à l’extérieur d’un système peuvent être documentées de différentes manières :
+APIs can be documented in two ways:
 
-* *Contract First* : on écrit le contrat dans un format donné (RAML, WSDL, etc.), et ensuite on écrit ou on _génère_ le code correspondant.
-À noter que si le code est généré, il y a toujours une seconde étape de "raccordement" au code métier.
-* *Code First* : on écrit le code technique permettant d’exposer l’API.
-Ce code peut être enrichi de métadonnées sur l’utilisation de l’API (description, signification des différents codes d’erreur, etc.).
-La documentation est ensuite générée sur la base de ce code, notamment avec l’initiative *OpenAPI* (anciennement Swagger) et les nombreux outils de son écosystème.
-Dans le cas où ce mécanisme est inclus dans la construction du projet, la documentation évolue à chaque changement de code.
+* *Contract First* : the API specification is written (OpenAPI, RAML, WSDL, etc.) first, then the matching code is written or generated.
+If the code is generated, there always is a manual step to wire it to the business code.
 
-L’approche *code first* est la plus pérenne, car elle évite qu’un décalage entre la documentation et le code s’introduise au fil du temps.
+* *Code First* : the code is written first.
+This code can be enhanced with metadata of the API (description, explanations for each error codes, etc.)
+The documentation is then generated based on the code, particularly with the emergence of *OpenAPI* (formerly Swagger) and various tools in its ecosystem.
+Such a documentation evolves as code does.
 
-Il faut cependant être vigilant sur les modifications d’une API et à ce que cela va impliquer pour les clients de cette API.
+The *code first* approach is the most durable, as it avoids a drift between documentation and code to grow over time.
 
-Certains changements sont sans conséquences
+In any case, modifying an API must be taken carefully, as it may lead to breaking changes for end users (and this can have business consequences).
 
-* Ajouter un champ dans une réponse
-* Supprimer un champ optionnel dans une requête
+Some changes have no consequences:
 
--> _Qui peut le plus, peut le moins_.
+* Add a new field in a response
+* Remove an optional field from a request
 
-D’autres changements, comme
+-> _What do the most can also do the least_.
 
-* Supprimer un champ dans une réponse
-* Ajouter un champ obligatoire dans une requête
+Other changes, have consequences:
 
-Vont entrainer des malfonctions dans la communication, et nécessitent d’être abordés différemment.
+* Delete a field from a response
+* Add a mandatory field in a request
 
-Dans le cas où ce second genre de modifications est nécessaire, il est possible de proposer une nouvelle version de l’API tout en continuant de servir la première version.
+And will lead to communication errors and needs to be operated differently.
 
-Ainsi les clients ont le temps de faire le changement de code nécessaire de leur côté pour utiliser la nouvelle version.
-Quand tous les clients ont opéré ces changements, le code de la première version peut êre supprimé.
+In the case of a change with breaking changes is needed, it must be introduced with a new version of the API, while maintaining the old version.
 
-Ce faisant, on introduit un *_découplage_* entre les systèmes en permettant que chacun fasse les changements à son rythme.
+This way, customers have the time to operate the necessary change of code on their side to use the new version.
+When all customers hav moved on to the new version, the previous one can be deleted.
+
+This approach introduces a *_low coupling_* between systems allowing them to evolve at different paces.

@@ -1,10 +1,10 @@
 include::chapter-base.adoc[]
 == Conclusion
 
-Contrairement à ce que l’industrie en France tente de nous faire croire, être Architecte Logiciel n’est pas un métier à part.
+To the contrary of what french industry tries to make us believe, being a software architect is not a job separated from being a developer.
 
-Ces questions d’architectures doivent être traitées par l’équipe de développement, chacun à la mesure de son expérience.
+Architectural questions must be handled by the development team, each one having its own experience and interest to a specific matter.
 
-Ce sont bien des [.underline]#développeurs# qui doivent réfléchir aux conséquences de leurs réalisations et qui de toute façon les assumerons une fois le produit en production.
+It is the job of [.underline]#software engineers# to think about the consequences of their doing, as they will face them anyway, once the product is in production.
 
-L’architecture logicielle, tout comme la veille technologique, fait partie intégrante du portefeuille d’outils d’un développeur.
+Software architecture, as for technology monitoring, is an integral part of the tools portfolio of the developer.
