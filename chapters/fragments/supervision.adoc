@@ -1,25 +1,25 @@
-La collecte de logs et de métriques forme la base de la _supervision_ d’un système.
+Collecting logs and metrics is the ground on which supervision is built.
 
-Sur cette base, il est nécessaire d’ajouter des composants pour transformer ces données brutes en :
+On this, we add components to refine data into:
 
-* Alertes, dans le cas où un comportement anormal est détecté
-* Tableaux de bord, pour investiguer un comportement anormal, trouver des correlations et converger vers l’origine du problème.
+* Alerts, triggered when an abnormal behavior is detected
+* Dashboards, to investigate an issue, find correlations and converge on the issue origin
 
-La supervision, c’est l’outillage qui permet de suivre l’état d’un système, de comprendre son fonctionnement, et même de prévoir son utilisation.
+Supervision is the tool that allows to follow the system state, understand its operation and even predict its use.
 
 [TIP]
 ====
-Il faut néanmoins faire preuve de retenue et ne garder que les informations qui ont de la valeur, au risque de se perdre dans trop d’information et de devoir stocker d’énormes quantités d’informations inutiles.
+Beware to only keep relevant data in such systems, as it can grow very fast and it can become tricky to navigate in the significant amount of data.
 
-Le résultat doit être construit à l’aide de ces trois questions :
+The end product is built with the help of these three questions:
 
-* Quels sont les comportements du système que l’on souhaite identifier comme problématiques (service indisponible, utilisation anormale, etc.) ?
-* Quels comportements du système souhaite-t-on comprendre (coup de bélier, interruption de services externes, etc.) ?
-* Où placer les sondes qui remonterons les informations nécessaires ?
+* What are the behavior of the system identified as abnormal? (unavailable service, high resource usage, etc.)
+* What system behavior do we want to understand? (water hammer, external service unavailability, etc.)
+* Where to put the probes that will generate necessary metrics ?
 ====
 
-Que ce soit des outils d’indexation de document, de stockage de séries temporelles ou des bases de données, tous sont des sources d’information pour la constitution de tableaux de bord et d’alerte.
+Tools for document indexation, storage of time-series or databases, all are information source that can be leveraged to build dashboards and alerts.
 
-L’outil open-source le plus complet aujourd’hui pour aggréger ces sources est Grafana
+Today, the most popular choice among open-source tools for aggregating such data is Grafana.
 
 image::grafana.png[align=center]

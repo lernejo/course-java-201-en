@@ -1,19 +1,19 @@
 include::chapter-base.adoc[]
-== Techniques & bonnes pratiques
+== Technics & best practices
 
 === KISS, YAGNI & DRY
 
-Quelques principes populaires qui circulent dans les communautés de développeurs :
+Some popular principles among developers communities:
 
-* **K**eep **I**t **S**tupid **S**imple : Le plus simple, le mieux.
-Faire simple n’est cependant pas toujours facile.
-* **Y**ou **A**in’t **G**onna **N**eed **I**t : N’ajouter que du code utile dans le présent.
-Les prédictions sur le futur peuvent se révéler fausses et la conception qui a été faites "en prévision de" peut faire obstacle une fois le futur devenu présent.
-* **D**on’t **R**epeat **Y**ourself : La duplication est mal vue parmi les développeurs, et amène plusieurs problèmes :
-** C’est plus de travail, il faut écrire, tester et maintenir plusieurs fois le même code
-** En cas de bug, il faut corriger à de multiples endroits, certains pouvant être oubliés
+* **K**eep **I**t **S**tupid **S**imple : The simpler, the better.
+However do something in a simple way can be a difficult exercise.
+* **Y**ou **A**in’t **G**onna **N**eed **I**t : Only add code useful at the time of its writing.
+Predictions on how a piece of software will evolve are often wrong and code structure that was planned may be an obstacle for real evolutions.
+* **D**on’t **R**epeat **Y**ourself : Duplication is frowned upon by developers, and bring several issues :
+** It's more work, as the same code needs to be written, tested and maintained several times
+** In case of a bug, multiple fixes must be done, and some may be forgotten
 
-C’est cette même simplicité que l’on retrouve dans deux des douze principes du *Manifeste Agile* :
+This same simplicity can be found in two of the twelve principles of the *Agile Manifesto*:
 
 * Our highest priority is to satisfy the customer through early and continuous delivery of [.underline]#*valuable*# software
 * Simplicity [the art of maximizing the amount of work not done] is essential.

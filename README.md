@@ -1,10 +1,10 @@
-# course-java-201-fr
-Cours de java (architecture & design)
+# course-java-201-en
+Java course (architecture & design)
 
-[![Render](https://github.com/lernejo/course-java-201-fr/actions/workflows/render.yml/badge.svg)](https://github.com/lernejo/course-java-201-fr/actions/workflows/render.yml)
+[![Render](https://github.com/lernejo/course-java-201-en/actions/workflows/render.yml/badge.svg)](https://github.com/lernejo/course-java-201-en/actions/workflows/render.yml)
 
-Consulter la dernière version en [HTML](https://lernejo.github.io/course-java-201-fr/) ou [PDF](https://raw.githubusercontent.com/lernejo/course-java-201-fr/rendered/main/pdf/index.pdf)
+Read the latest version in [HTML](https://lernejo.github.io/course-java-201-en/) or [PDF](https://raw.githubusercontent.com/lernejo/course-java-201-en/rendered/main/pdf/index.pdf)
 
 ## Edition
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#github.com/lernejo/course-java-201.git)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#github.com/lernejo/course-java-201-en.git)

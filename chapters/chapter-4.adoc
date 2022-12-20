@@ -1,178 +1,175 @@
 include::chapter-base.adoc[]
-== Dimensionnement & considérations relatives
+== Scaling & relative considerations
 
-Historiquement, la construction d’application monolithique et dont l’état est géré en mémoire (_stateful_) nécessitait avec l’augmentation de la charge des serveurs plus puissants.
+Some time ago, the habit of building monolithic applications with in-memory state (such applications are said _stateful_) needed more powerful servers to follow an increase in usage.
 
-Il s’agissait donc d’augmenter
+What needed to be increased:
 
-* RAM (mémoire)
-* Fréquence CPU
-* Nombre de coeur CPU
-* Taille du disque dur
+* RAM (memory)
+* CPU frequency
+* Number of CPU cores
+* Disk size
 
-Dans ce cas, on parle de *dimensionnement vertical*.
-Il se trouve que le coût du matériel n’est pas proportionnel à la puissance, mais plutôt exponentiel.
-Ce type de dimensionnement (ou _scaling_) arrive donc rapidement à une limite technique (puissance maximale des CPUs à une époque, etc.) ou financière.
+Such upgrades fall under *vertical scaling*.
+However hardware prices are not proportional to power, but rather exponential.
+This scaling type rapidly faces technical limit (maximum power of a CPU at a certain time) or financial limit.
 
-Certains systèmes, comme les bases de données SQL traditionnelles (Oracle, PostgreSQL, MariaDB, etc.) ne peuvent augmenter leurs capacités que de cette manière.
+Some systems, such as traditional SQL databases (Oracle, PostgreSQL, MySql, etc.) hav no choice but to use this kind of scaling.
 
-À l’inverse, les applications peuvent être structurées de manière à pouvoir être dimensionnées différemment.
+Conversely, applications can be structured in a way that they can be scaled differently.
 
-On parle dans ce cas de *dimensionnement horizontal*, qui consiste à augmenter le nombre de conteneurs / vms / serveurs pour augmenter de manière linéaire le nombre d’appels que le système peut traiter.
+In this case, *horizontal scaling*, which involves adding more containers / VMs / serveurs to increase the system capacities in a *linear* way.
 
 image::vertical_vs_horizontal_scaling.png[align=center]
 
-Un autre aspect négatif de l’approche instance unique est que tout changement nécessitant un redémarrage de l’application (configuration, nouvelle version, etc.) interrompt le service rendu.
+Another downside of having a unique instance, is that any change needing a reboot (configuration, new version, etc.) will interrupt the service.
 
-Dans le cas où il y a plusieurs instances d’une même application, que ce soit derrière un *répartiteur de charge* (_load-balancer_) ou qu’elles consomment les messages d’un broker, en éteindre une ne coupe pas le service.
+Whereas with several instances of the same service, rebooting one is transparent from the user perspective.
 
-Il est tout à fait possible de configurer le *répartiteur de charge* afin de ne plus distribuer de connexion vers une instance, de laisser les connexions existantes se terminer et enfin de pouvoir éteindre l’instance sans impact pour les utilisateurs.
+Rebooting all instances, each one at a time, is called *rolling update* and used to update an application without service interruption.
 
-Traiter toutes les instances d’une même application comme celà pour réaliser une mise à jour est appelé *rolling update*.
+The only warning with such a system, is to pay attention to N-1 retro-compatibility, as during an update, both versions, the old one and the new one, will run behind the same load-balancer at some point.
+So API of the old version must have the same contracts and behave the same when used on the new version.
 
-Attention toutefois à ce que les systèmes connectés à l’application (clients d’une API, base de données, etc.) puissent fonctionner avec les deux versions qui vont cohabiter durant la mise à jour.
+=== Identify SPOFs
 
-=== Identifier les SPOFs
 
-Les SPOFs (**S**ingle **P**oint **O**f **F**ailure) sont les parties d’un système qui ne peuvent pas avoir plus d’une instance et qui par conséquent entrainent une coupure de service en cas d’arrêt (crash, mise à jour, etc.).
+SPOFs (**S**ingle **P**oint **O**f **F**ailure), are parts of a system that cannot have more than one instance and by design lead to service interruption in case of a stop (crash, update, etc.).
 
-Il est important de les identifier et de monitorer leur état pour pouvoir réagir en cas de problème.
+It is important to have monitoring on these components in order to rapidly take action in case of an issue.
 
-Cette réaction peut être automatique (bascule sur un réplica jusque-là passif) ou manuelle (démarrage de services alternatifs).
+This reaction can be automated (switch to a replica, passive until then) or manual.
 
-Tenir compte des SPOFs peut également influer sur l’architecture du système pour limiter au strict minimum la charge qui y est envoyée, ou mettre en place des mécanismes pour alléger cette charge (un cache de données par exemple).
+Knowing where SPOFs are, can also orient the system architecture to avoid flooding these components by setting up throttling or caching.
 
-Ces considérations sont applicables à tout système dont on voudrait diminuer l’usage (une API extérieure payante par exemple) et rejoigne de même concept de découplage (diminuer les dépendances entres composants).
+SQL databases are often SPOFs; but most of them have replication mechanisms capable of keeping several other instances up-to-date and ready to use if the main one fails.
 
-Les bases de données (SQL) sont également souvent des SPOFs ; il est cependant possible dans la plupart des cas de mettre en place des réplicas pouvant remplacer la base principale en cas d’indisponibilité.
-
-.Mécanisme de bascule pour PostgreSQL (`pg_auto_failover`)
+.PostgreSQL replica switch mechanism (`pg_auto_failover`)
 image::pg_auto_failover.png[align=center]
 
-=== Identifier les points de contention
+=== Identify points of contention
 
-Quand un système est soumis à de fortes charges, des points de contention (ou goulot d’étranglement) peuvent apparaître.
+When a system is under heavy load, points of contention may appear.
 
-Il s’agit de partie de système dont la vitesse de traitement est plus lente et qui constitue la vitesse maximale du système dans son ensemble.
+We are talking about parts of the system with slower processing which defines the maximum speed of the overall system.
 
-NOTE: À l’instar d’un système d’écoulement d’eaux pluviales, si un des tuyaux a un faible débit, c’est tout le système qui est plus lent, et qui risque l’engorgement
+NOTE: Like with a stormwater run-off system, if one of the pipe has a low throughput, the whole system appears slow, risking congestion
 
-Ces points de contention peuvent provoquer des réactions en chaîne ou en cacher d’autres.
+A point of contention can induce cascading reactions or hide several other contentions.
 
-Pour les identifier et si nécessaire les améliorer, il est nécessaire d’avoir une supervision précise des différents composants du système.
-La supervision est constituée entre autres, d’un ensemble de sondes qui permettent de relever des données à interval régulier et d’en faire des courbes.
-Ces courbes témoignent de l’évolution du système dans le temps et permettent de faire la corrélation entre des évènements exogènes et des conséquences endogènes, notamment l’apparition de points de contention.
+To identify and improve them if necessary, a precise supervision of each components of the system is required.
+Supervision consists, among other things, of a probe set which collect data periodically so they can be graphed.
+These graphs reflect the system evolution over time and allow to make correlations between exogenous events and endogenous consequences.
 
-=== Répartir la charge
-==== Pour les communications synchrones
+=== Distribute the load
+==== For synchronous communications
 
-Pour distribuer la charge sur plusieurs instances d’un même service, on utilise des répartiteurs de charge qu’ils soient matériel (F5, Altéon, etc.) ou logiciel (HAProxy, Nginx, Traefik, etc.).
+To distribute the load on multiple instances of a same service, we use load-balancers, whether they are hardware (F5, Altéon, etc.) or software (HAProxy, Nginx, Traefik, etc.).
 
-Il existe différentes configurations possibles, notamment pour affecter des poids aux nœuds cibles ou établir une affinité de session (_sticky session_).
+Multiple configurations are available, to weight target nodes or establish _sticky session_.
 
-Les répartiteurs de charge logiciels sont plus simples à configurer et peuvent même être pilotés par une API.
-Cela permet notamment d’automatiser des opérations telles que le *rolling update* précédemment mentionné.
+Software load-balancers are simpler to configure and can even be controlled through an API.
+This last capability allow to automate operations such as the previously mentioned *rolling update*.
 
-==== Pour les communications asynchrones
+==== For asynchronous communications
 
-Pour ce qui est des communications asynchrones, on va tendre le plus possible vers l’utilisation d’un _broker de message_ qui fera le tampon entre les applications communicantes.
+When using asynchronous communication protocols, its is best to rely on a dedicated message broker which acts as a buffer between applications.
 
-Un certain nombre d’outils peuvent être mis en place pour rendre un broker _hautement disponible_ (**H**igh **A**vailability) et capable d’ingérer de grosses volumétries.
+Several tools and mechanisms are available to make a broker _**H**igh **A**vailability_ and capable of ingesting large quantities of data.
 
-Ce faisant, le broker pourra accueillir les éventuels coups de béliers (très grosses charges temporaires) sans redistribuer la pression aux applications clientes.
+Such a broker can ingest occasional pressure surges and damper them for listening applications.
 
-En effet, quand deux systèmes communiquent, il est préférable de fonctionner en _flux tiré_ de sorte que l’application cliente consomme quand elle le veut et au rythme ou elle le peut les messages qui lui sont destinés.
+When communicating asynchronously, using pull flow allow a listening application to consume events at its own pace.
 
-La répartition de charge se fait naturellement avec l’augmentation du nombre d’instances de l’application cliente (pour Kafka, au sein d’un même *client-group*, le nombre de partitions doit être supérieure à celui des applications clientes).
+Load distribution is available _by design_ by adding more instances of listening applications.
 
-Il faut cependant être vigilant à la stratégie de livraison de message :
+Most brokers offer different delivery strategies:
 
-* *at most once* : un message est délivré au plus une fois. Par conséquent, il peut y avoir des pertes de message (cas marginal).
-** Cas d’usage : notifications, données peu importantes
-* *at least once* : un message est délivré au moins une fois. Par conséquent, il peut être délivré plusieurs fois (cas marginal) et l’application cliente doit être capable de dé-dupliquer ces messages
-** Cas d’usage : tout le reste, du moment qu’on ne peut pas se permettre de perdre un message (commande client, transaction bancaire, changement d’une fiche patient, etc.)
+* *at most once*: in this case, events can be loss
+** Use case: notifications, data of little importance
+* *at least once*: in this case, events can be delivered more than once, listening applications must be able to behave in an idempotent way
+** Use case: every other cases, where loosing data is not an option (customer order, bank transaction, etc.)
 
-=== Exemple d’évolution d’architecture
-Considérant une application _classique_ comme celle-ci :
+=== Architecture evolution example
+Consider a _typical_ application such as:
 
-.Diagramme de Contexte
+.Context diagram
 image::korekto_context.png[align=center]
 
-.Diagramme de Container
+.Container diagram
 image::korekto_container_v0.png[align=center]
 
-==== Introduction d’un répartiteur de charge
+==== Introduction of a load-balancer
 
-Le dimensionnement horizontal, c’est la capacité du système à répartir la charge sur plusieurs instances (ou nœuds).
-Mais du point de vue des utilisateurs, il n’y a qu’un seul service (https://korekto.io par exemple).
-Pour faire cela il est nécessaire d’introduire un répartiteur de charge.
+Horizontal scaling, is the ability to increase a system capacity by adding more instances (or nodes).
+But from the users perspective, there is only one service (https://korekto.io for example).
+To map from one service to multiple instances, we use a load-balancer.
 
-Attention ici, la partie qui exécute une tâche toutes les 4 heures ne doit être active que sur une seule instance, sous peine de faire le même travail plusieurs fois, ce qui peut provoquer :
+Warning, the part that executes a task every 4 hours must only be active on one instance, under penalty of doing the same job multiple times, which can lead to:
 
-* Charge CPU inutile
-* États incohérents en base
+* Pointless CPU load
+* Incoherent data
 
 image::korekto_container_v1.png[align=center]
 
-==== Découpage de l’applicatif
+==== Split the application
 
-Certaines fonctions de l’application, sont exécutées plus au moins souvent, et utilisent plus ou moins de CPU.
-
-Il peut être intéressant de découper une application monolithique en plusieurs petites applications pour pouvoir dimensionner finement les fonctions les plus sollicitées.
-
-Ce découpage doit respecter une unique règle pour être profitable :
+Some features are used less often and uses less CPU.
+It can be interresting to split our monolithic application into smaller ones, to be able to update them independently and scale them differently.
+This separation must respect one golden rule to be durable:
 
 [IMPORTANT]
 ====
-Les applications découpées à partir d’un monolithe doivent être indépendantes d’un point de vue métier et technique.
+Applications must be independent technically AND logically (from a business perspective).
 
-C’est-à-dire que si une de ces applications est amenée à évoluer, elle doit pouvoir être mise à jour sans impact dans les autres applications
+This means that if one application is to evolve, it can do so without impact to others.
 ====
 
 image::korekto_container_v2.png[align=center]
 
-==== Suppression des SPOFs
+==== Deleting SPOFs
 
-Les points de défaillance unique (**S**ingle **P**oint **O**f **F**ailure), sont des conteneurs du système qui ne peuvent pas être répliqués.
-Cela pose 2 problèmes :
+**S**ingle **P**oint **O**f **F**ailure are components of the system that cannot be replicated.
+This causes 2 issues:
 
-* Si le conteneur ne fonctionne plus, il y a une coupure de service
-* Si le trafic augmente (ici le nombre d’exercices à corriger), la seule solution est par définition le dimensionnement vertical.
+* If the component stops working, it causes a service disruption
+* If the traffic increases, the only possibility is vertical scaling
 
-La cause des SPOFs est souvent un état en mémoire qui ne peut être facilement répliqué.
-C’est le cas de notre conteneur *[batch]*.
+SPOF nature is often due to a state stored in memory or a low latency storage need.
+This is the case of the *[batch]* component.
 
-En effet, si plusieurs instances devaient s’exécuter, comment pourraient-elles simplement se synchroniser pour se répartir le travail et reprendre celui des autres instances dans le cas de pannes ?
+If multiple instances were to execute simultaneously, how could they synchronize to distribute the work and restart jobs of failing instances ?
 
-Dans notre cas, il est possible de faire plus simple en utilisant les hooks de GitHub pour être notifié en cas de changement, plutôt que de lancer une tache quoi qu’il arrive.
+In our case, the simplest move is to use GitHub webhooks to be notified in case of a change, rather than periodically scan for change.
 
 image::korekto_container_v3.png[align=center]
 
-==== Ne pas communiquer par le stockage !
+==== Do not exchange data through storage
 
-Quand nous avons découpé notre applicatif, nous avons commis une grave erreur.
-En effet, le conteneur *[web]* et le conteneur *[grader]* communiquent par la base de données.
+During the split, a mistake was made.
+Indeed, the *[web]* container and the *[grader]* one exchange data through the database.
 
-C’est un *anti-pattern* d’architecture, car :
+This is well known anti-pattern, because:
 
-* Comment changer la base par une autre sans impacter les 2 conteneurs ?
-* Comment changer la façon de stocker la donnée sans impacter les 2 conteneurs ?
+* How to change the database model without impact for both containers?
+* How to change the way data is stored without impact for both containers?
 
-Bref, ces 2 conteneurs sont couplés.
+These two containers are coupled.
 
-Le but ici va être d’introduire un nouveau _container_ qui va abstraire le stockage.
+The objective now, is to introduce a new container which will abstract the storage.
 
 image::korekto_container_v4.png[align=center]
 
-Ainsi, dans le cas où
+Therefore, when
 
-* Une partie de la donnée doit être stockée de manière différente (dans une base de donnée relationnelle par ex)
+* Some of the data must be stored in a different way (in a relational database for example)
 [unstyled]
-** -> la seule modification à apporter est dans le code du conteneur *[storage API]*.
-* Le format de spécification d’exercice évolue pour inclure plus de données --> [storage API] on propose une nouvelle API (GET / POST / PUT / DELETE) link:#[/api/admin/specification/exercise/${name}/v2]
+** -> the change occurs in one only container, the *[storage API]* one
+* The exercise model evolves to include more data
 [unstyled]
-** -> *[web]* on utilise cette nouvelle API pour que les professeurs puissent écrire des spécifications plus détaillées
-** -> *[grader]* on utilise cette nouvelle API pour corriger les exercices plus finement
-** -> *[storage API]* on supprime l’ancienne API (link:#[/api/admin/specification/exercise/${name}/v1]) maintenant que plus aucun conteneur ne l’utilise
+** -> *[storage API]* supplies a new API (GET / POST / PUT / DELETE) link:#[/api/admin/specification/exercise/${name}/v2]
+** -> *[web]* may use this API so teachers can better define properties of an exercise
+** -> *[grader]* may use this API to improve grading
+** -> *[storage API]* may delete the old API (link:#[/api/admin/specification/exercise/${name}/v1]) when no container use it anymore
 
-Ce genre de changement peut être apporté sans coupure de service.
+These kind of changes can be applied with no service disruption

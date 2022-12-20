@@ -1,4 +1,5 @@
 ifndef::course-root[]
 :hardbreaks-option:
 :imagesdir: ./../images
+:icons: font
 endif::[]

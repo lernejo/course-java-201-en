@@ -1,7 +1,7 @@
 include::chapter-base.adoc[]
-== Gestion des logs
+== Log management
 
-.Exemple de log peu utile
+.Example of useless log
 [source]
 ----
 2017-02-04 22:33:12 [thread-1] com.github.some.project.DatabaseService l.74 #################
@@ -18,7 +18,7 @@ at org.h2.jdbc.JdbcPreparedStatement.execute(JdbcPreparedStatement.java:201)
 ... 50 more
 ----
 
-.C’est déjà mieux
+.A little better
 [source]
 ----
 2017-02-04 22:33:12.332 INFO  5jhgd45ui74h c.g.s.p.UserService.create [Joshua] [Bloch] Save successful
@@ -26,17 +26,17 @@ at org.h2.jdbc.JdbcPreparedStatement.execute(JdbcPreparedStatement.java:201)
 2017-02-04 22:33:12.964 ERROR hg457gehe4rt c.g.s.p.UserService.create [James] [Gosling] Save KO: already exists
 ----
 
-Les logs ou fichiers d’évènements sont ces _fichiers_ qui contiennent les informations nécessaires au diagnostique en cas de problème.
-Elles peuvent également être utilisées comme source de données pour créer des métriques de supervision.
-Les logs sont souvent la seule trace de la chronologie des évènements et sont d’autant plus importantes dans les applications à fort traffic, où résoudre le problème d’un utilisateur peut s’apparenter à chercher une aiguille dans une botte de foin.
+Log _files_ contain all information needed to diagnose issues.
+These information can also bu used to build metrics for supervising the system.
+Logs are often the sole source of the event chronology and are especially important in high traffic applications where finding the issue of a particular user can seem like looking for a needle in a haystack.
 
-=== Bibliothèques de log
+=== Log libraries
 
-Côté applicatif, il existe de nombreuses bibliothèques pour écrire dans des fichiers de logs.
+On the app side, there are many library to help write log events.
 
-Rien que dans l’univers Java, on peut trouver
+Just in the Java ecosystem, we can find:
 
-* JUL (**J**ava **U**til **L**ogging) minimaliste, fourni par le JDK
+* JUL (**J**ava **U**til **L**ogging) minimalist, supplied by the JDK
 * Apache JULI (**J**ava **U**til **L**ogging **I**nterface)
 * Apache Commons Logging
 * Apache Log4J
@@ -44,59 +44,58 @@ Rien que dans l’univers Java, on peut trouver
 * Logback
 * etc.
 
-On retrouve dans ces différents outils des concepts communs :
+We find in these various tools common concepts:
 
-* Découplage entre le composant qui collecte les logs (`Logger`) et celui qui écrit à l’extérieur du système (`Appender`)
-* Configuration extérieure au code (fichier, propriétés système)
-* Niveaux de sévérités
-** *DEBUG* : utilise pour le développement, invisible une fois l’application déployée en dehors d’un poste de développement
-** *INFO* : information sur un évènement dans le système (changement d’état ou réaction à une sollicitation exogène)
-** *WARN* : une erreur est survenue, le système ne s’est pas comporté comme prévu, mais aucune intervention humaine n’est requise immédiatement
-** *ERROR* : une erreur est survenue, une intervention humaine est requise pour corriger le problème
-** (*FATAL* : une erreur [.underline]#irrémédiable# est survenue, suite à quoi le système s’est arrêté)
+* Low coupling between the component that collects log events (`Logger`) and the one which write them outside the system (`Appender`)
+* Configuration outside the code (file, system properties, etc.)
+* Severity levels:
+** *DEBUG* : use during the development phase, invisible once the application is deployed
+** *INFO* : information about an event in the system (state change, or reaction to an outside trigger)
+** *WARN* : an error happened, the system did not behave as expected, but no manual intervention is immediately needed
+** *ERROR* : an error happened, a human intervention is required to fix the system
 
 [NOTE]
 ====
-Une erreur métier n’est pas forcément une erreur technique.
-Par exemple : un utilisateur qui entre un mauvais mot de passe est un cas métier normal, géré par le code, et l’évènement correspondant (s’il est tracé) est de sévérité *INFO*.
+A business error is not necessarily a technical error.
+For example: a user entering the wrong password is a normal business case, handled in the code, and the matching event (if recorded) is of *INFO* level.
 ====
 
-==== Architecture de SLF4J
+==== SLF4J architecture
 
-Le problème avec cette multiplicité de choix d’outil est que l’écosystème s’est construit de manière hétérogène.
+The issue with having this many tools for writing log is that the ecosystem is mixed.
 
-* Tomcat utilise *JUL* à travers l’abstraction *JULI*.
-* Spring utilise *Apache Commons Logging*.
-* Le client *HBase* officiel utilise *Log4j*.
+* Tomcat uses *JUL* through the *JULI* abstraction
+* Spring uses *Apache Commons Logging*.
+* *HBase* official client uses *Log4j*.
 * Etc.
 
-Une application qui utilise différents frameworks et bibliothèques devrait alors configurer chacune de ces technologies de _logging_ et ce de manière cohérente (même format de ligne, même fichier, même sévérité minimum, etc.).
+One application,using different frameworks and libraries, should then configure each of these _logging_ libraries in a consistent way (same event format, files, retained severity, etc.).
 
-Ce serait pénible, et le risque de problèmes serait élevé (concurrence d’accès sur un même fichier, etc.).
+It would be not only annoying, but also error prone (race condition on the same file, configuration oversight, etc.).
 
-Une technologie existe cependant, pour unifier tous ces outils : *SLF4J*.
+However, *SLF4J* was designed to unify all these tools.
 
-Cet outil est composé
+*SLF4J* is made of:
 
-* D’une *_API abstraite_* représentant de manière unifiée un grand nombre des fonctionnalités des bibliothèques de log existantes
-* D’*_adaptateurs_* entre cette API et les bibliothèques de logs existantes qui ne l’implémentent pas
-* De *_bridges_*, bibliothèques ayant la même compatibilité binaire (même noms qualifiés des classes, même signatures des méthodes) que les bibliothèques de logs existantes, mais redirigeant les messages vers l’*_API abstraite_*
+* An *_abstract API_* forming a unique facade for various but common logging features
+* *_Adapters_* between this API and existing log libraries
+* *_Bridges_*, libraries having the same binary compatibility (same qualified class names, same method signatures) as existing log libraries, but redirecting calls to the *_abstract API_*
 
 image::slf4j_bridges.png[align=center]
 
-Dans une application mettant cette technologie à profit, toutes les logs sont redirigées vers cette *_API abstraite_* et envoyées vers une seule et unique bibliothèque de log.
+Using *SLF4J* means redirecting all logs to this *_abstract API_* and send them one unique implementation.
 
-La configuration est alors faite une fois, et il n’y a plus de risque de concurrence d’accès.
+Configuration is then done once.
 
 ==== MDC (Mapped Diagnostic Context)
 
-Le *MDC* est un outil fourni par la plupart des bibliothèques de log qui permet de transporter de l’information dans un même thread.
+The *MDC* is a tool supplied by many log libraries which allows to transport information in a same thread.
 
-L’idée est d’enrichir les informations transverses utiles pour une ligne de log au fur et à mesure de leur disponibilité, sans avoir à les passer en paramètres de toutes les méthodes précédant l’écriture du message.
+The goal is to enhance event information with common data as they are available, without having to pass them as parameters in each methods.
 
-Considérant ce code :
+Consider this code:
 
-.Fichier MyController.java
+.File MyController.java
 [source,java]
 ----
 class MyController {
@@ -109,7 +108,7 @@ class MyController {
 }
 ----
 
-.Fichier MyService.java
+.File MyService.java
 [source,java]
 ----
 class MyService {
@@ -138,11 +137,11 @@ class MyService {
 }
 ----
 
-La variable `correlationId` est passé systématiquement car il est nécessaire de la logger à chaque fois pour réconcilier plusieurs lignes de logs qui concernent le même appel d’un utilisateur.
+The `correlationId` variable is systematically passed because it is required to log it each time, allowing later reconciliation of multiple events matching the same user trigger.
 
-C’est une bonne candidate pour le *MDC* :
+It is a good fit for the *MDC* use:
 
-.Fichier MyController.java
+.File MyController.java
 [source,java]
 ----
 class MyController {
@@ -156,7 +155,7 @@ class MyController {
 }
 ----
 
-.Fichier MyService.java
+.File MyService.java
 [source,java]
 ----
 class MyService {
@@ -185,9 +184,9 @@ class MyService {
 }
 ----
 
-Il n’y a plus qu’à configurer le bon format de sortie des lignes de log pour que le `correlationId` soit présent.
+MDC variables we want to appear should then be configured in the output format.
 
-.Fichier logback.xml
+.File logback.xml
 [source,xml]
 ----
 <configuration>
@@ -203,30 +202,29 @@ Il n’y a plus qu’à configurer le bon format de sortie des lignes de log pou
   </root>
 </configuration>
 ----
-<1> Ici une ligne de log sera structurée comme suit : <heure> <nom du thread> <sévérité> <nom de la classe> - <correlationId> <message>
+<1> Pattern used to write events in the console
 
-=== Logs GC
+=== GC logs
 
-Les logs applicatives sont une chose, mais quand un problème arrive en production, son origine ou ses symptômes peuvent être techniques.
+Causes of an issue can be technical, and related to the **G**arbarge **C**ollector.
 
-Il est important de ne pas oublier d’activer les logs du **G**arbarge **C**ollector.
-Cela se fait avec un flag sur la ligne de commande du démarrage de la JVM :
+So it is important to enable its logs, using a flag when starting the JVM:
 
 `-Xlog:gc=debug:file=gc.log:pid,time,uptimemillis:filecount=5,filesize=1M`
 
-Ici la JVM va écrire les évènements à partir de la sévérité *debug* dans un fichier *gc.log* (en gérant la rotation sur 5 fichiers max de 1M chacun) avec les informations PID (processus ID), heure et durée d’exécution de l’application.
+In this example, the JVM will write GC events of minimal *debug* severity in file named *gc.log* (with a rotation on 5 files maximum of 1M each) with additional information: PID (processus ID), time and execution duration.
 
-Plus d’options ici : https://openjdk.java.net/jeps/158
+More options here: https://openjdk.java.net/jeps/158
 
-[.underline]#Alternativement# des outils de collecte de métriques tels que *Micrometer* peuvent exporter ces informations vers des systèmes ingérant des _séries temporelles_ (Time Series) tels que *Graphite*, *Warp10* ou *Prometheus* (pour du on-premise).
+[.underline]#Alternately#, metrics collection tools like *Micrometer* can export these information to time-series ingesting systems, such as *Graphite*, *Warp10* or *Prometheus*.
 
 === Heap Dump
-Quand la JVM s’arrête de manière non prévue, cela peut être à cause d’un problème de mémoire (**O**ut **O**f **M**emory error) et dans ce cas l’investigation peut se faire sur la base d’un *Heap Dump*.
+When the JVM stops unexpectedly, this can be due to an **O**ut **O**f **M**emory error, and the investigation can be done using a *Heap Dump*.
 
-Un *Heap Dump* est une projection sur fichier de l’état de la mémoire de la JVM.
+A *Heap Dump* is the projection in a file of the memory state of the JVM.
 
-Voici donc le flag à ne pas oublier sur la ligne de commande du démarrage de la JVM :
+This flag needs to be added when starting the JVM, so that such a file is produced in case of a crash:
 
 `-XX:+HeapDumpOnOutOfMemoryError`
 
-Par la suite un tel fichier peut être analysé avec des outils comme *Eclipse MAT* (gratuit) ou *JProfiler* (payant).
+Produced files can be analyzed with tools such as *Eclipse MAT* (free) or *JProfiler* (licensed).

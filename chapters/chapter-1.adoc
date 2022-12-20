@@ -1,91 +1,90 @@
 include::chapter-base.adoc[]
-== Rappels sur les outils
+== Tools recap
 
 === Git
 
-Git est un SCM (**S**ource **C**ode **M**anagement tool) décentralisé.
+Git is a decentralized SCM (**S**ource **C**ode **M**anagement tool).
 
-On étend par décentralisé le fait qu’il peut y avoir plusieurs instances d’un même dépôt sur des serveurs différents.
-Typiquement, dans le monde de l’open-source, quand un individu externe à l’organisation souhaite contribuer au code d’un dépôt, il en fait une copie, travaille sur sa copie, puis propose le code de sa copie pour intégration sur le dépôt _officiel_.
+Decentralized means that they exists multiple remotes instances of the same repository on different servers.
+Typically, in the open-source community, when someone external to a project wants to contribute, this person starts by creating a copy of the repository (fork), work on this instance, then offer a submission (pull or merge request) to the project's owners.
 
-Git est aujourd’hui très répandu, mais fait suite historiquement à d’autres SCMs (CVS, SVN, Mercurial, etc.).
-Tous ces outils fonctionnent par différentiel (patch) pour permettre de restaurer une version précédente, ou encore de travailler sur une version parallèle qui pourra plus tard être réincorporée dans la version principale.
+Git is broadly used today, and succeed to other SCM tools (CVS, SVN, Mercurial, etc.).
+These various tools offer the same ability to historize differentials, to allow to restore a previous version, or work on a new version in parallel, which will be later on merged on the main branch.
 
 image::git_sample.png[align=center]
 
-Voici le vocabulaire consacré :
+Here is the vocabulary in use:
 
-* *commit* : une révision / version contenant des modifications de code
-* *branch* : un fil de modification, une suite de révisions
-* *tag* : alias pour une version spécifique, souvent utilisé pour marquer une version applicative (1.0.25 par exemple)
-* *merge* : fusion d’une branche dans une autre
-* *checkout* : récupérer le code d’un serveur distant dans une version spécifique
+* *commit* : a revision / version containing code modifications
+* *branch* : un thread of commits
+* *tag* : alias for a specific commit, ofter used to mark an _applicative version_ (1.0.25 for example)
+* *merge* : merge of one branch onto another
+* *checkout* : retrieve locally the code from a remote server in a specific version
 
-==== Quelques commandes utiles
+==== Some useful commands
 
-* Initialiser un dépôt
-** `git clone <url>` : copie un dépôt distant existant en local
-** Ou `git init` : transforme le dossier courant en dépôt local. Un dépôt distant pourra être indiqué par la suite avec `git remote add origin <url>`
+* Initialize a repository
+** `git clone <url>` : copy locally a remote repository
+** Ou `git init` : turn the current directory into a local repository. A default remote repository can later be attached using `git remote add origin <url>`.
 
-* Mettre à jour
-** `git fetch --all --prune` : récupère les changements du dépôt distant
-** `git pull` : fusionne les changements distants avec les fichiers locaux
-** `git rebase origin/<current-branch>` : déplace les commits locaux après ceux ayant été poussés sur le dépôt distant (et sur la même branche)
+* Update
+** `git fetch --all --prune` : retrieve the Git database latest version
+** `git pull` : on the current branch, retrieve the remote changes (merge or rebase, depending on the configuration)
+** `git rebase origin/<current-branch>` : on the current branch, move local commits after those having been pushed on the remote repository
 
-* Changer de branche
-** `git checkout <branch>` : positionne les sources courantes sur la dernière version de `<branch>`
-** `git branch -b <branch>` : crée une branche de nom `<branch>` dont le point de départ est le commit courant
+* Switch branches
+** `git checkout <branch>` : set the working directory files in the latest version of `<branch>`
+** `git branch -b <branch>` : create a new branch named `<branch>` with the starting point being the latest commit
 
-* Observer les changements
-** `git status` : affiche les différences entre les dépôts local et distant
-** `git log --oneline -n 15` : affiche les 15 derniers commits de la branche courante (avec leurs hash)
-** `git diff --stat` : affiche un résumé des changements
-** `git diff --word-diff=color <file>` : affiche les changements effectués sur le fichier `<file>`
+* Display changes
+** `git status` : display indexed (green) and not-indexed (red) local changes along with commit differences with the default remote
+** `git log --oneline -n 15` : display the last 15 commits of the current branch (including their hashes)
+** `git diff --stat` : display a summary of local changes
+** `git diff --word-diff=color <file>` : display the the local changes of the file `<file>`
 
-* Apporter des changements
-** `git add <file>` : ajoute le fichier `<file>` à l’_index_
-** `git add .` : ajoute tous les fichiers modifiés à l’_index_ (traverse les répertoires)
-** `git reset <file>` : enlève le fichier `<file>` de l’_index_
-** `git commit -m "<title>"` : crée un commit avec toutes les modifications dans l’_index_ avec le titre `<title>`
-** `git commit --fixup <hash>` : crée un commit de correction d’un commit existant de hash `<hash>` avec toutes les modifications dans l’_index_
-** `git rebase -i --autosquash <hash>` : initie un rebase interactif et déplace et marque les commits de correction pour les fusionner, jusqu’au commit de hash `<hash>` exclu
+* Introduce changes
+** `git add <file>` : add the file `<file>` to Git index
+** `git add .` : add all (recursively) changed files to Git index
+** `git reset <file>` : remove file `<file>` from Git index
+** `git commit -m "<title>"` : create a new commit with all indexed changes with the title `<title>`
+** `git commit --amend --no-edit` : include all indexed changes in the latest commit
+** `git commit --fixup <hash>` : create a new commit with all indexed changes, "tagged" as _fix_, targeting an existing commit of ID `<hash>`
+** `git rebase -i --autosquash <hash>` : start an interactive rebase until the commit of ID `<hash>` excluded, and moves _fixup_ commits right after targetted commits, and mark them for merge (fixup)
 
 Source : https://git-scm.com/docs
 
-==== Pour les utilisateurs de Windows
-Git est sensible au bit d’execution des fichiers (`chmod +x`).
-*Windows* ne gérant pas de la même façon les permissions sur les fichiers qu’Unix, il est recommandé de désactiver cette sensibilité avec `git config core.fileMode false`
-Pour expliciter le fait qu’un fichier soit executable : `git update-index --chmod=+x <file>`
+==== Windows users
+Git is aware of files execution bit (`chmod +x`).
+As *Windows* does not handle file permission Unix does, it is recommended to disable this awareness with `git config core.fileMode false`.
+To explicitly set a file as executable from Git perspective: `git update-index --chmod=+x <file>`
 
-=== Concepts utilisés par Git
+=== Git concepts
 
-On appelle *remotes* les serveurs distants configurés sur une copie locale.
-Le remote par défaut est appelé *origin*.
-Dans le cas où le dépôt a été cloné (et non initialisé) *origin* pointe sur l’url utilisée lors du _clone_.
+*Remotes* are git repositories located in remote servers.
+The default remote is called *origin*.
+When a local repository has been cloned (hence, not initialized), *origin* targets the URL used at the time of the clone operation.
 
-Git utilise une base de données (répertoire *.git*) qui contient l’arbre de toutes les modifications de chaque branche.
-Celle-ci contient également la version des différents remotes.
-Les branches en question sont accessibles avec le nom : *<remote_name>/<branch_name>*.
-Par exemple *origin/main* est la branche *main* telle que le serveur *origin* la connaissait lors de la dernière synchronisation de la base de donnée.
-Il est tout à fait possible d’avoir une (et une seule) version locale et plusieurs versions distantes d’une même branche différente.
-Ce sera lors d’un push (envoi de l’historique local vers un remote) que ces versions deviendront les mêmes.
+Git stores its data in a specific directory (*.git*), which contains the graph of all revisions of all branches, local and remote.
+Remote branches are available through their local name: *<remote_name>/<branch_name>*.
+For example, *origin/main* is the branch *main* as seen by the *origin* server when the last synchronisation (`git fetch`) was done.
+It is quite usual to have one (and one only) local version of a branch, and one more remote branches with different versions.
+It is only when a push will be done to a specific remote that these versions will match.
+Deleting the *.git* directory will permanently erase all revisions that have not been pushed to a remote.
 
-La copie de travail (*working copy*) sont les fichiers contenus dans un dépôt local.
-Il est possible de les modifier, d’en ajouter ou d’en supprimer, sans modifier les versions connues par Git.
-Il sera, dans tous les cas, possible de revenir à une version connue par Git, grâce à la base de données.
+The *working copy* is all the files in the local repository (expect for the *.git* directory).
+Modification, creation or deletion of these files can be done without alter revisions known to Git.
+In any case, Git can restore the previous state of the working copy as long as this state is recorded as a commit.
 
-Afin de considérer les modifications opérées sur la copie de travail pour être historisées (embarquées dans un _commit_), il est nécessaire de les indexer.
-L’*index* est l’espace accueillant les modifications qui seront comprises dans un commit.
-Il est possible d’y ajouter des éléments (ajout, suppression ou modification de fichier) avec la commande `add`.
-Y enlever des éléments se fait avec la commande `reset`.
-Enfin la commande `status` fait apparaître dans des couleurs différentes les changements qui sont indexés et ceux qui ne le sont pas.
-Par défaut les changements indexés sont en vert et les autres en rouge.
-Réaliser un _commit_ (commande `commit`), embarquera toutes les modifications vertes.
+In order to _commit_ modifications of the *working copy*, they must be indexed.
+The *index* allows to select only some files (and not others) when creating a commit.
+Files can be added, with the `add` command, or removed, with the `reset` command.
+The `status` command displays in different colors current changes, in green the indexed files, in red, the others.
+Performing a commit will consider all files displayed in green.
 
 ==== Rebase
-Une des fonctionnalités qui démarque Git de ses prédécesseurs est le *rebase*.
+The rebase is one of the feature that place Git way ahead of its predecessors.
 
-Le *rebase* peut être utilisé pour remettre à jour une branche quand la branche d’origine a changé.
+It allows to update a branch with its remote state without complicated merge manual actions, as long as there no conflict requiring human oversight.
 
 [source,bash]
 ----
@@ -93,45 +92,45 @@ git fetch --all --prune # <1>
 git log --one-line -n 10 # <2>
 git rebase origin/main # <3>
 ----
-<1> Récupère la base de donnée du remote par défaut (*origin*) pour toutes les branches
-<2> Affiche les dix derniers commits de la branche courante
-<3> Modifie l’historique de la branche courante en mettant les commits réalisés après la base à la suite des derniers commits de la branche `main` telle qu’elle est connue par *origin*
+<1> Get the latest version of all branches of the default remote (*origin*)
+<2> Display the last 10 commits of the current branch
+<3> Modify the history of the current branch by moving commits done after the base after the last ones pushed on the `main` branch of the remote *origin*
 
 image::git_rebase.png[align=center]
 
-Le *rebase* peut également être utilisé en mode _**interactif**_ pour modifier son historique local :
+The *rebase* command can also be used interactively to alter the local history of the current branch:
 
-* Ajouter des modifications dans un commit
-* Changer le nom d’un commit
-* Fusionner des commits
-* Supprimer des commits
-* Ré-ordonner des commits
+* Add changes in an exiting commit
+* Change the name or description of a commit
+* Merge several commits into one
+* Delete commits (discarding changes)
+* Change commits order
 
-TIP: Ne pas utiliser le rebase sur une branche partagée par plusieurs développeurs, et encore moins `main`
+TIP: Do not use rebase on a branch shared by more than one person. Especially the `main` branch.
 
 === Maven
 
-Maven est un outil de construction de projet (Build Automation tool) autour de la JVM.
+Maven is a build automation tool, for JVM-based projects.
 
-Il permet entre autre d’orchestrer :
+It handles, among other functionalities:
 
-* Gestion des dépendances
-* Compilation des sources
-* Lancement des tests
-* Génération de la documentation
-* Assemblage des binaires
+* Dependency management
+* Source code compilation
+* Tests execution
+* Documentation generation
+* Packaging of binaries
 
-Sa grande extensibilité lui permet de s’adapter à différents languages (Java, Scala, Kotlin, etc.) et à différents scénarios (intégration continue, génération de code, déploiement, etc.).
+It's plugin-based system allows to adapt to various languages (Java, Scala, Kotlin, etc.) as well as different contexts (Continuous Integration, code generation, deployment, etc.).
 
-==== Structure d’un projet
+==== Project structure
 
-Maven propose de baser l’organisation d’un projet sur des conventions (nommage, structure des répertoires, etc.) plutôt que sur de la configuration pure comme ses prédécesseurs (Make, Ant, etc. ).
+A Maven project is organized by convention (over configuration) to avoid re-define standard parts, such as: source code, tests, etc.
 
-Cette structure est composée de
+A the root of a Maven project, we found:
 
-* Un fichier pom.xml qui contient toutes les informations nécessaires à Maven pour construire le projet. Sa structure minimale est la suivante
+* A pom.xml file which contains all information needed for Maven to build the project. Its minimal content is as follow:
 
-.Fichier pom.xml
+.File pom.xml
 [source,xml]
 ----
 <?xml version="1.0"?>
@@ -152,55 +151,55 @@ Cette structure est composée de
     </properties>
 </project>
 ----
-<1> Le triplet `groupId`, `artifactId` et `version` sont les coordonnées qui identifient un projet Maven et permettent des dépendances avec d’autres
-<2> Section optionnelle, permettant de fixer l’encodage et la version de Java utilisée pour éviter des conflits par la suite
+<1> The tuple `groupId`, `artifactId` et `version` are the coordinates which identifies one Maven project and allows referencing it from others.
+<2> Optional section, here fixing the encoding and Java version to avoid conflicts later on
 
 //-
 
-* Un répertoire *src* qui contiendra tous les fichiers que l’on souhaite conserver dans le SCM
-** Dans *src* on retrouve deux répertoires : *main* et *test* qui contiennent respectivement le code de production, et le code de test (code qui ne sera pas inclus dans les binaires produits lors de la phase de *_packaging_*)
-*** Dans ces deux répertoires, on trouve un répertoire du nom du langage utilisé, dans cet exemple, *java*
-**** Enfin dans ce**s** répertoire**s** *java* (ou *groovy*, etc.), on retrouve le code. Ce code est organisé en packages, eux-mêmes étant constitués de répertoires
+* A *src* directory which will contains all files we want to keep in the SCM
+** In *src*, there is standardly two directories: *main* et *test* which respectively contain production code, and test code (code not included in binaries produced during the *_packaging_* phase)
+*** In each of these two directories, a directory named after the language used exists, in this exemple: *java*, but can be *groovy*, *kotlin*, etc.
+**** Finally, in these directories, we put the code. This code is organized in packages, being themselves composed of directories
 
-.Structure d’un projet Maven
+.Structure of a Maven project
 image::maven_structure.png[align=center]
 
-==== Cycle de vie d’un projet Maven
+==== Lifecycle of a Maven project
 
-Par défaut Maven utilise un cycle de vie permettant à la grande majorité des projets d’être construit avec peu de configuration.
+By default, Maven uses a lifecycle which allows a majority of projects to be built with minimal configuration.
 
-Les principales *phases* sont :
+The main *phases* are:
 
-* *clean* : nettoie les fichiers compilés ou générés
-* *compile* : compile les sources _principales (main)_
-* *test-compile* : compile les sources de _test_
-* *test* : lance les tests
-* *package* : construit le binaire (*jar* par défaut)
-* *install* : place le binaire dans le dépôt Maven local
-* *deploy* : place le binaire dans un dépôt Maven distant
-* *site* : génère la documentation
+* *clean* : delete all created / generated files
+* *compile* : compile _main_ sources
+* *test-compile* : compile _test_ sources
+* *test* : run tests
+* *package* : create the binary archive (*jar* by default)
+* *install* : copy the binary archive in the local Maven repository
+* *deploy* : copy the binary archive in a distant Maven repository
+* *site* : generate the documentation
 
-Chaque phase est associable à un ou plusieurs *plugins*, ce qui rend Maven très extensible.
+Each phase can be associated to one or more *plugins*, which makes Maven very extensive.
 
-Voici les associations par défaut :
+The default associations are:
 
 image::maven_circle.png[align=center]
 
-Des plugins sont fournis directement par Maven, comme le *maven-clean-plugin*, qui supprime les fichiers compilés et générés.
+Some plugins are supplied by the Maven team, as the *maven-clean-plugin*, which deletes all generated files.
 
-D’autres sont créés par la communauté sans voir besoin de modifier l’outil. Par exemple :
+Others are created by the community, and do not require evolution in Maven itself. For example:
 
-* *cukedoctor-maven-plugin* : produit une version HTML du résultat des tests Cucumber
-* *sonar-maven-plugin* : analyse le code avec différents outils (PMD, Checkstyle, JaCoCo, etc.) et publie les résultats vers un serveur Sonar
+* *cukedoctor-maven-plugin* : create an HTML report of Cucumber tests execution
+* *checkstyle-maven-plugin* : statically analyze the code, and fail the build in case of a rule violation
 
 Source : https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 
-==== Balises de configuration
-Toutes les balises doivent être contenues dans le bloc `<project>`.
+==== Configuration tags
+All tags must be contained in the `<project>` bloc.
 
-Dans les balises notables, on retrouve :
+Among the most used tags, there is:
 
-* `properties` : cette balise contient des propriétés (clé et valeur) qui peuvent être utilisées par la suite, soit par convention par les plugins, soit explicitement avec  l’écriture `${my-property}`
+* `properties`: this tag contains key-value pairs, which can be used later on, either by convention by plugins, or explicitly using a language expression `${my-property}`
 
 [source,xml]
 ----
@@ -209,7 +208,7 @@ Dans les balises notables, on retrouve :
 </properties>
 ----
 
-* `dependencies` : cette balise contient toutes les dépendances d’un projet sur d’autres (internes, externes, frameworks, bibliothèques, etc.)
+* `dependencies`: this tag contains all dependencies used tin the project. A dependency can be a sibling module or and external library available from a remote repository.
 
 [source,xml]
 ----
@@ -227,13 +226,13 @@ Dans les balises notables, on retrouve :
     </dependency>
 </dependencies>
 ----
-<1> Le bloc `dependencies` est constitué de blocs `dependency` (singulier), chacun contenant les coordonnées d’une dépendance
-<2> La valeur de la version fait référence à la propriété `my-test-lib.version`, donc `1.2`
-<3> Ce second bloc est indiqué avec le *_scope_* `test`, cette dépendance ne sera donc disponible que pour le code de test
+<1> The `dependencies` bloc is composed of `dependency` (singular) blocs, each containing the coordinates of one dependency
+<2> The version value references the `my-test-lib.version` property, therefore `1.2`
+<3> This second dependency has the `test` *_scope_*, hence this dependency is only available for test code
 
 //-
 
-* `build/plugins` : cette balise contient tous les plugins utilisés par le projet ainsi que leurs configurations
+* `build/plugins`: this tag contains all plugins used by the project as well as their configurations
 
 [source,xml]
 ----
@@ -250,13 +249,13 @@ Dans les balises notables, on retrouve :
     </plugins>
 </build>
 ----
-<1> À l’instar de la balise `dependencies`, la balise `plugins` contient des blocs de `plugin` (singulier)
-<2> Ici c’est le plugin `maven-surefire-plugin` qui est utilisé. Il s’agit du plugin par défaut pour lancer les tests. Un plugin est un projet Maven, et à ce titre est référencé grâce à ses coordonnées (`groupId`, `artifactId` et `version`) comme pour les dépendances
-<3> La balise configuration permet de modifier le comportement du plugin, ici le plugin va faire échouer le build si aucun test n’est trouvé
+<1> As for the `dependencies` tag, the `plugins` one contains `plugin` (singular) blocs
+<2> Here the `maven-surefire-plugin` plugin is used. It is the default plugin for executing tests. By adding this bloc, the version is fixed and the configuration overridden. A plugin is a Maven project, and as such, has coordinates like dependencies
+<3> The `configuration` tag allows to change the default behavior of the plugin. Here the project build will fail if no test is found
 
 //-
 
-* `profiles` : cette balise permet d’ajouter des pans de configuration qui sont désactivables. Un profil peut ajouter des `properties`, des `dependencies`, des `plugins` et même des `modules` (utilisés pour les projets multi-modules)
+* `profiles`: this tag allow to add configuration fragments that can be activated/ deactivated at will, without changing the project. A profile may add `properties`, `dependencies`, `plugins` and even `modules` (used in multi-modules project)
 
 [source,xml]
 ----
@@ -269,19 +268,19 @@ Dans les balises notables, on retrouve :
     </profile>
 </profiles>
 ----
-<1> Balise obligatoire, un profil doit avoir un `id`, ce qui permet de l’activer en ligne de commande, par exemple : `mvn install -P disable-tests`
+<1> Mandatory tag, a profile must have an ID, used to activate it from the command line. For example: `mvn install -P disable-tests`
 
 === JUnit
 
-Java ne propose pas dans le JDK d’outils pour construire et exécuter des tests.
+Java does not supply a built-in tool or API to describe or run tests.
 
-Maven propose un répertoire de source, des phases (compilation & exécution) et un scope pour gérer ce code qui n’est pas destiné à la production.
-Cependant, Maven ne fourni pas directement d’outil pour déclarer ou exécuter ces tests.
+Maven supply a dedicated directory, phases (compilation & execution), and a scope to handle this code which is not going into production.
+However, Maven does not supply either tool or API to describe and execute these tests.
 
-C’est là qu’entrent en jeu les frameworks de tests.
-Il en existe plusieurs, et JUnit est aujourd’hui le plus répandu.
+This is where _test frameworks_ come in.
+There are several of them, and JUnit is the most used today in the Java world.
 
-==== Utilisation de l’API de JUnit-Jupiter
+==== Utilisation of JUnit-Jupiter API
 
 [source,java]
 ----
@@ -319,59 +318,59 @@ class CalculatorTest {
     }
 }
 ----
-<1> Méthode identifiée comme un test car marquée avec l’annotation `org.junit.jupiter.api.Test`
-<2> Élément déclencheur, du code de production est exécuté
-<3> On vérifie le résultat du code de production (ici avec la bibliothèque *AssertJ*)
-<4> Ces trois lignes forme une seule expression, le compilateur ne tenant pas compte des sauts de ligne. Ce genre d’écriture est appelé *fluent interface* et repose sur des appels consécutifs de méthodes de sorte à former des phrases. Ici littéralement : vérifie que la variable `result` en tant que "division of 8 by 2" est égal à 4
-<5> Type différent de vérification, ici on vérifie qu’une erreur est produite, le test sera non passant si aucune erreur n’est produite ou si le type de l’erreur est différent de celui indiqué
-<6> Une fonction est passée à l’API de vérification, elle sera exécutée par la bibliothèque, dans un bloc `try / catch`
-<7> Vérification du message de l’erreur, si le message ne correspond pas, le test sera non passant
-<8> Méthode identifiée comme un test paramétré, elle sera exécutée autant de fois qu’il y a de jeux de données. La méthode dans cet exemple sera exécutée 2 fois.
-<9> Le jeu de donnée, ici passé comme un CSV (Comma Separated Values), d’autres sources de données sont possibles.
-<10> La méthode prend donc des paramètres dont le nombre correspond aux données dans les jeux de données. L’ordre des paramètres doit correspondre à l’ordre des données.
+<1> Method mark as a test one, because annotated with `org.junit.jupiter.api.Test`
+<2> Trigger event, some _main_ code is executed
+<3> The result of the main code call is checked (here with the *AssertJ* library)
+<4> These three lines compose a single expression, as the compiler ignores line breaks. This kind of writing is called *fluent interface* and is built on consecutive method calls in such as way that they compose a meaningful sentence. Here, literally: check that the `result` variable as the "division of 8 by 2" is equal to 4
+<5> Check that an error is produced. This test will break if no error is produced or if the type of the error is different from the one expected
+<6> A function is given to the assertion API, it will be executed by the library, in a `try / catch` bloc
+<7> Check of the error message, if the message does not match the expected one, the test will fail
+<8> Method marked as a parameterized test, it will be executed as many times as there are test cases. In this example, the method will be executed twice
+<9> The dataset, here supplied as inlined CSV (Comma Separated Values), other sources may be used
+<10> Method parameters must match those in a test case, and follow the same order.
 
-==== Comment JUnit fonctionne avec Maven
+==== How JUnit works with Maven
 
-*JUnit-Jupiter* défini plusieurs choses :
+*JUnit-Jupiter* is composed of several parts:
 
-* Une API pour déclarer une méthode comme étant un test (`@Test`, etc.)
-* Un moteur d’exécution qui sait détecter les tests et les lancer
+* An API to describe test methods (`@Test`, etc.)
+* An execution engine which is able to detect and run test methods
 
-JUnit fourni également un lanceur de moteur(s) d’exécution : *junit-platform-launcher*
+JUnit also supplies a launcher of execution engine: *junit-platform-launcher*
 
-Enfin, le plugin *maven-surefire-plugin* "sait" se connecter (entre autres) à ce _launcher_ (depuis la version 2.22.0).
+Finally, the *maven-surefire-plugin* plugin "knows" how to connect (among other tools) to this  _launcher_ (since version 2.22.0).
 
 [NOTE]
 ====
-Pour résumer :
+To summarize :
 
-* La phase *test* de Maven est associé au plugin *maven-surefire-plugin*
-* Ce plugin peut lancer *junit-platform-launcher* (si cette bibliothèque est présente sur le classpath)
-* Ce _launcher_ peut lancer les moteurs d’exécutions construits avec l’API de moteur d’exécution *junit-platform-engine*, notamment *JUnit-Jupiter*
-* *JUnit-Jupiter* sait détecter et lancer les tests déclarés avec son API
+* The *test* phase of Maven is associated to the *maven-surefire-plugin* plugin
+* This plugin can run *junit-platform-launcher* (if this library is available in the _classpath_)
+* This _launcher_ can run execution engines built with the *junit-platform-engine* API, *JUnit-Jupiter* being one of them
+* *JUnit-Jupiter* can detect and run tests described with its API
 ====
 
-==== Un peu d’histoire
+==== A story about JUnit
 
-JUnit est un vieux framework (1997) et celui-ci a beaucoup évolué au fil des versions de Java.
-La version 4, arrivée en 2006 (après Java 1.5) a longtemps été utilisée, du fait de la simplicité d’écriture apportée par le support des annotations (`@Test`).
-En 2015, une campagne de financement participatif est lancée pour créer JUnit**5**, une réécriture totale du framework.
+JUnit is an old framework (1997) and has evolved a lot through Java versions.
+The version 4, released in 2006 (after Java 1.5), has been broadly adopted and used during a long time, due to its simplicity using annotations (`@Test`).
+In 2015, a crowdfunding campaign is launched to create JUnit5, a complete rewriting of the framework.
 
-Le constat de l’équipe est que le côté monolithique qui a jusque-là prévalu, a amené des dérives dans l’API du framework, qui est à la fois permissive et très complexe.
+Right from the start, the team choose to create modular and dedicated APIs to avoid the same slides in the previous API, which was both very permissive and very complicated.
 
-En effet, si le point de départ d’un test est conventionnellement une méthode, des plugins voient le jour pour changer ce paradigme (Cucumber, etc.), où un test peut-être un paragraphe dans un fichier texte.
+This was due to the initial API being designed to mark test methods, but evolved to allow plugins to describe tests arbitrarily (Cucumber, etc.) where a test can be a paragraph in a text file.
 
-Par ailleurs, même s’il existe plusieurs points d’extension dans cette version 4, le plus utilisé est le `Runner`, qui a le défaut de ne pas être composable.
-Cela demande aux équipes fournissant des plugins de fournir des outils qui fonctionnent depuis plusieurs points d’extensions (`Runner`, `Rule`, initialisation dans une méthode de `setUp`, etc.) pour contourner ce défaut
+Furthermore, even if there was several extension points in version 4, the most used was `Runner`, which could not be composed.
+This lead plugin teams to supply tools available from several extension points (`Runner`, `Rule`, initialization in `setUp` method, etc.) to bypass this flaw.
 
-L’équipe de JUnit5 estime que chaque paradigme devrait avoir sa propre API et son propre moteur d’exécution, pour que le code soit plus spécifique, et donc plus simple.
+JUnit5 team stated that each paradigm should have its own API and execution engine, so that the code can be more specific, and much simple.
 
-L’architecture résultante est la suivante :
+The resulting architecture is:
 
 image::junit5_architecture.png[align=center]
 
-*JUnit-platform* est un framework pour construire (et lancer) des moteurs d’exécutions.
+*JUnit-platform* is a framework to build and run execution engines.
 
-*JUnit-Vintage* est un moteur d’exécution qui est compatible avec l’API de JUnit4.
+*JUnit-Vintage* is an execution engine compatible with JUnit4 API.
 
-*JUnit-Jupiter* est le moteur d’exécution d’une nouvelle API qui profite (entre autres) de points d’extension multiples et composables.
+*JUnit-Jupiter* is an execution engine with a new API which offers multiple and composable extension points.

@@ -12,29 +12,30 @@ It means that the heart of thinking architecturally about software is to decide 
 For a developer to become an architect, they need to be able to recognize what elements are important, recognizing what elements are likely to result in serious problems should they not be controlled.
 _____
 
-Un logiciel doit répondre à plusieurs objectifs dépendant de son contexte.
-Parmi ces objectifs on retrouve :
+A piece of software tries to achieve several objectives depending on the context.
+Among these objectives, we encounter:
 
-* Maintenabilité / évolutivité
-* Testabilité
-* Fiabilité / Robustesse / tolérance à la panne
-* Scalabilité
-* Sécurité
+* Maintainability
+* Testability
+* Reliability / Resilience
+* Scalability
+* Security
 * Performance
+* etc.
 
-L’architecture logicielle est l’ensemble des moyens techniques utilisés pour répondre à ces objectifs tout en satisfaisant aux contraintes non techniques du projet.
+Software architecture is the technical means used to meet the objectives set for a particular project while complying with constraints.
 
-Tous les objectifs ne peuvent pas être atteint d’un coup, et l’architecture logicielle est le compromis qui convient le mieux pour atteindre les objectifs prioritaires dans le contexte du projet.
+As all the objectives cannot be met in one development iteration, software architecture is the ideal compromise in regard to project priorities.
 
-Les facteurs peuvent être multiples :
+Constraints can be:
 
-* Délais courts (_deadline_)
-* Budget limité
-* Certification de sécurité nécessaire
-* Connexion à un système _historique_ utilisant une technologie spécifique
-* Etc.
+* Short term realisation / deadline
+* Limited funding
+* Security compliance
+* Connection to a third party software using specific technology / protocol
+* etc.
 
-L’ordre de priorité de ces objectifs doit être décidé avec l’ensemble des acteurs du projet et réajusté périodiquement afin de suivre l’évolution du projet dans le temps.
-Il s’agit d’un partenariat.
+Priorities must be decided by all stakeholders, and periodically adjusted to follow the project evolution.
+It is a partnership.
 
-L’équipe de développement met en oeuvre les principes d’architecture logicielle pour répondre au mieux aux objectifs du projet.
+The development team uses architecture principles to reach projects objectives in the best way.

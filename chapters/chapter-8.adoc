@@ -1,23 +1,24 @@
 include::chapter-base.adoc[]
-=== Centralisation des logs
+=== Centralized log management
 
-Afin de pouvoir exploiter au mieux les logs, il est important de les centraliser.
-C’est-à-dire les envoyer dans un même endroit, que ce soit dans un :
+In order to simplify the process of searching some event in log files, it is important to centralized them.
 
-* Système de fichier, sur lequel on pourra utiliser la commande `grep` par exemple
-* _ElasticSearch_, _Loki_ ou équivalent, sur lequel on pourra faire des requêtes
-* SAAS dont c’est le coeur de métier (_Datadog_, _Logz.io_, etc.)
+This means send them in the same place, whether it be:
 
-Les logs doivent être claires et apporter le maximum d’information possible.
-Pour cela on évite les logs visuelles ou de _debug_.
+* A file system, in which the `grep` command can be used
+* _ElasticSearch_, _Loki_ or equivalent, in which logs can be queried
+* A SAAS solution whose job it is (_Datadog_, _Logz.io_, etc.)
 
-==== La stack Elastic
+Logs must be obvious and provide the maximum information possible.
+This is why visual visual logging or _debug_ events must not be sent to such systems.
 
-Il existe plusieurs solutions de centralisation _on premise_, la plus connue étant la suite proposée par _Elastic_ : *ELK* (**E**lasticSearch, **L**ogstash, **K**ibana).
-Aujourd’hui un peu datée, des composants peuvent être remplacés, la chaîne peut être plus complexe pour mieux gérer le dimensionnement, mais la structure reste néanmoins identique.
+==== The Elastic stack
+
+The most popular solution of log centralization (among others) is the _Elastic_ one: *ELK* (**E**lasticSearch, **L**ogstash, **K**ibana).
+Each of its component can be replaced by another tool, and the chain can be more complex to handle scaling, but the structure, nevertheless, stay the same.
 
 image::elk_stack.png[align=center]
 
-La brique *Logstash* permet de découper les lignes de logs en documents structurés (JSON) pour ensuite les envoyer à *ElasticSearch*.
-*ElasticSearch* indexe les documents reçus et propose une API de recherche utilisée par *Kibana*.
-*Kibana* fourni une interface Web qui satisfait aussi bien à la recherche exploratoire qu’à la création de tableaux de bord pour suivre l’état du système.
+* *Logstash* slices log lines into structured documents (JSON) and send them to *ElasticSearch*
+* *ElasticSearch* indexes them and supply an API to query these indexes
+* *Kibana* is a web interface to create dashboards and search arbitrary data
